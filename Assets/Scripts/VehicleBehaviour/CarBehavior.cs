@@ -204,7 +204,7 @@ namespace PolyPerfect.City
                 transform.position = newPosition;
 
                 if(direction != Vector3.zero)
-                    transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(direction, Vector3.up), maxspeed * Time.deltaTime *15);
+                    transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(direction, Vector3.up), maxspeed * Time.deltaTime * 15);
             }
             else
             {

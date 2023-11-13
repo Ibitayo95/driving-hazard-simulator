@@ -9,7 +9,12 @@ public class WheelController : MonoBehaviour
     [SerializeField] WheelCollider frontLeft;
     [SerializeField] WheelCollider backLeft;
 
- 
+    [SerializeField] Transform backLeftTransform;
+    [SerializeField] Transform frontRightTransform;
+    [SerializeField] Transform frontLeftTransform;
+    [SerializeField] Transform backRightTransform;
+
+
 
     public float acceleration = 500f;
     public float breakingForce = 300f;
@@ -57,10 +62,10 @@ public class WheelController : MonoBehaviour
         frontRight.steerAngle = currentTurnAngle;
 
         // Update wheel meshes (so they actually turn with the car)
-         //UpdateWheel(frontLeft, frontLeftTransform);
-         //UpdateWheel(backRight, backRightTransform);
-         //UpdateWheel(frontRight, frontRightTransform);
-         //UpdateWheel(backLeft, backLeftTransform);
+         UpdateWheel(frontLeft, frontLeftTransform);
+         UpdateWheel(backRight, backRightTransform);
+         UpdateWheel(frontRight, frontRightTransform);
+         UpdateWheel(backLeft, backLeftTransform);
         
     }
 

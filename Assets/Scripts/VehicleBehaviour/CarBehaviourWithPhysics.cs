@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using PolyPerfect.City;
 using UnityEngine;
+
 
     [RequireComponent(typeof(PathFinding)),RequireComponent(typeof(Rigidbody))]
     public class CarBehaviorWithPhysics : MonoBehaviour
@@ -185,7 +187,7 @@ using UnityEngine;
         // update the wheels so that they rotate and spin with the car's movement
         private void UpdateWheels() 
         {
-          foreach(Transform wheel in wheelTransforms) 
+          foreach(WheelCollider wheel in wheels) 
           {
             Vector3 position;
             Quaternion rotation;

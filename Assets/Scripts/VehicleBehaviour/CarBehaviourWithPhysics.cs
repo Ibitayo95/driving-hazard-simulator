@@ -212,10 +212,10 @@ using UnityEngine;
         {
           foreach (WheelCollider wheel in wheels) 
           {
-            // check if wheel is front wheel
+            // check if wheel is front wheel - for turning
             if (wheel.transform.localPosition.z > 0) wheel.steerAngle = steerAngle;
-            // check if wheel is rear wheel
-            if (wheel.transform.localPosition.z < 0) wheel.motorTorque = speed*KMHTOMS;
+            // apply power to all wheels
+            wheel.motorTorque = speed*KMHTOMS;
             // if car is moving too fast apply brakes
             if (rb.velocity.magnitude > currentMaxSpeed * KMHTOMS) 
             {

@@ -3,7 +3,14 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Car
+  - Terrain
+  - Human
+  - Crosswalk
+  - LevelCrossing
+  - TrafficLight
+  - TrafficLightCrosswalk
   layers:
   - Default
   - TransparentFX
@@ -11,11 +18,11 @@ TagManager:
   - 
   - Water
   - UI
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Road
+  - Traffic
+  - Buildings
+  - Obstacles
+  - Player
   - 
   - 
   - 

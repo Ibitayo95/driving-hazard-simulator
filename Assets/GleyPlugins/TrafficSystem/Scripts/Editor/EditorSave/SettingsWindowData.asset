@@ -32,9 +32,9 @@ MonoBehaviour:
       viewLaneChanges: 0
     waypointDistance: 4
   roadDefaults:
-    nrOfLanes: 1
-    laneWidth: 8
-    waypointDistance: 2
+    nrOfLanes: 2
+    laneWidth: 6
+    waypointDistance: 4
   roadColors:
     textColor: {r: 1, g: 1, b: 1, a: 1}
     roadColor: {r: 0, g: 1, b: 0, a: 1}

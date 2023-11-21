@@ -16,57 +16,74 @@ public class WheelController : MonoBehaviour
 
 
 
-    public float acceleration = 500f;
-    public float breakingForce = 300f;
-    public float maxTurnAngle = 15f;
+    public List<Transform> waypoints;
+    public float maxMotorTorque = 500f; // Maximum torque the motor can apply
+    public float maxSteeringAngle = 30f; // Maximum steer angle the wheels can have
+    public float brakeTorque = 30000f; // The torque that will be applied when we need the car to stop
 
+    private int currentWaypointIndex = 0;
 
-    private float currentAcceleration = 0f;
-    private float currentBreakForce = 0f;
-    private float currentTurnAngle = 0f;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
     void FixedUpdate()
     {
-        currentAcceleration = acceleration * Input.GetAxis("Vertical");
+        if (waypoints.Count == 0)
+            return;
 
-        if (Input.GetKey(KeyCode.Space)) // on some condition
+        ApplySteer();
+        Drive();
+        CheckWaypointDistance();
+        Braking();
+        UpdateWheel(frontLeft, frontLeftTransform);
+        UpdateWheel(backRight, backRightTransform);
+        UpdateWheel(frontRight, frontRightTransform);
+        UpdateWheel(backLeft, backLeftTransform);
+    }
+
+    private void ApplySteer()
+    {
+        Vector3 relativeVector = transform.InverseTransformPoint(waypoints[currentWaypointIndex].position);
+        float newSteer = (relativeVector.x / relativeVector.magnitude) * maxSteeringAngle;
+        frontLeft.steerAngle = newSteer;
+        frontRight.steerAngle = newSteer;
+    }
+
+    private void Drive()
+    {
+        frontLeft.motorTorque = maxMotorTorque;
+        frontRight.motorTorque = maxMotorTorque;
+        backLeft.motorTorque = maxMotorTorque;
+        backRight.motorTorque = maxMotorTorque;
+    }
+
+    private void CheckWaypointDistance()
+    {
+        if (Vector3.Distance(transform.position, waypoints[currentWaypointIndex].position) < 5f)
         {
-            currentBreakForce = breakingForce;
+            currentWaypointIndex = (currentWaypointIndex + 1) % waypoints.Count;
+        }
+    }
+
+    private void Braking()
+    {
+        if (Vector3.Distance(transform.position, waypoints[currentWaypointIndex].position) <= 10f)
+        {
+            ApplyBrake();
         }
         else
         {
-            currentBreakForce = 0f;
+            ReleaseBrake();
         }
+    }
 
-        // acceleration to front wheels (front wheel drive)
-        frontRight.motorTorque = currentAcceleration;
-        frontLeft.motorTorque = currentAcceleration;
+    private void ApplyBrake()
+    {
+        backLeft.brakeTorque = brakeTorque;
+        backRight.brakeTorque = brakeTorque;
+    }
 
-        // braking to all wheels
-        frontRight.brakeTorque = currentBreakForce;
-        backRight.brakeTorque = currentBreakForce;
-        frontLeft.brakeTorque = currentBreakForce;
-        backLeft.brakeTorque = currentBreakForce;
-
-
-        // steering
-        currentTurnAngle = maxTurnAngle * Input.GetAxis("Horizontal");
-        frontLeft.steerAngle = currentTurnAngle;
-        frontRight.steerAngle = currentTurnAngle;
-
-        // Update wheel meshes (so they actually turn with the car)
-         UpdateWheel(frontLeft, frontLeftTransform);
-         UpdateWheel(backRight, backRightTransform);
-         UpdateWheel(frontRight, frontRightTransform);
-         UpdateWheel(backLeft, backLeftTransform);
-        
+    private void ReleaseBrake()
+    {
+        backLeft.brakeTorque = 0;
+        backRight.brakeTorque = 0;
     }
 
 

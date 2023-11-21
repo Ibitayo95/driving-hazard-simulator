@@ -76,10 +76,11 @@ public class WheelController : MonoBehaviour
 
     private void ApplyBrake()
     {
-        backLeft.brakeTorque = brakeTorque;
-        backRight.brakeTorque = brakeTorque;
-        frontLeft.brakeTorque = brakeTorque;
-        frontRight.brakeTorque = brakeTorque;
+        // 70 % distribution of braking on the front tyres, 30 % on rear
+        backLeft.brakeTorque = brakeTorque * 0.5f;
+        backRight.brakeTorque = brakeTorque * 0.5f;
+        frontLeft.brakeTorque = brakeTorque * 1.5f;
+        frontRight.brakeTorque = brakeTorque * 1.5f;
     }
 
     private void ReleaseBrake()

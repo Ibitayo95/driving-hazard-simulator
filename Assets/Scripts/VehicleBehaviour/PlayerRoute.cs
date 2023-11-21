@@ -5,10 +5,11 @@ using UnityEngine;
 
 public class PlayerRoute : MonoBehaviour
 {
-    public static PlayerRoute[] route;
+    public static PlayerRouteWaypoint[] route;
 
     private void Awake()
     {
-        route = FindObjectsOfType<PlayerRoute>();
+        // get different waypoints of the player route in order
+        route = GetComponentsInChildren<PlayerRouteWaypoint>();
     }
 }

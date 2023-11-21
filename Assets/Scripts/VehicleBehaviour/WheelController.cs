@@ -15,17 +15,22 @@ public class WheelController : MonoBehaviour
     [SerializeField] Transform backRightTransform;
 
 
-
-    public List<Transform> waypoints;
+    private PlayerRouteWaypoint[] playerRoute;
     public float maxMotorTorque = 500f; // Maximum torque the motor can apply
     public float maxSteeringAngle = 30f; // Maximum steer angle the wheels can have
     public float brakeTorque = 30000f; // The torque that will be applied when we need the car to stop
 
     private int currentWaypointIndex = 0;
 
+    private void Awake()
+    {
+        playerRoute = PlayerRoute.route;
+    }
+
+
     void FixedUpdate()
     {
-        if (waypoints.Count == 0)
+        if (playerRoute.Length == 0)
             return;
 
         ApplySteer();
@@ -40,7 +45,7 @@ public class WheelController : MonoBehaviour
 
     private void ApplySteer()
     {
-        Vector3 relativeVector = transform.InverseTransformPoint(waypoints[currentWaypointIndex].position);
+        Vector3 relativeVector = transform.InverseTransformPoint(playerRoute[currentWaypointIndex].transform.position);
         float newSteer = (relativeVector.x / relativeVector.magnitude) * maxSteeringAngle;
         frontLeft.steerAngle = newSteer;
         frontRight.steerAngle = newSteer;
@@ -56,15 +61,15 @@ public class WheelController : MonoBehaviour
 
     private void CheckWaypointDistance()
     {
-        if (Vector3.Distance(transform.position, waypoints[currentWaypointIndex].position) < 5f)
+        if (Vector3.Distance(transform.position, playerRoute[currentWaypointIndex].transform.position) < 5f)
         {
-            currentWaypointIndex = (currentWaypointIndex + 1) % waypoints.Count;
+            currentWaypointIndex = (currentWaypointIndex + 1) % playerRoute.Length;
         }
     }
 
     private void Braking()
     {
-        if (Vector3.Distance(transform.position, waypoints[currentWaypointIndex].position) <= 10f)
+        if (Vector3.Distance(transform.position, playerRoute[currentWaypointIndex].transform.position) <= 10f)
         {
             ApplyBrake();
         }

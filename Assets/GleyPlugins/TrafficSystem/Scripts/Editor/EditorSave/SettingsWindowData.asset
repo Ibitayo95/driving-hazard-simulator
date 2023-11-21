@@ -32,7 +32,7 @@ MonoBehaviour:
       viewLaneChanges: 0
     waypointDistance: 4
   roadDefaults:
-    nrOfLanes: 2
+    nrOfLanes: 1
     laneWidth: 6
     waypointDistance: 4
   roadColors:
@@ -56,7 +56,7 @@ MonoBehaviour:
     - {r: 1, g: 1, b: 1, a: 1}
     active: 01
   allWaypointsSettings:
-    showConnections: 0
+    showConnections: 1
     showOtherLanes: 0
     showSpeed: 0
     showCars: 0
@@ -101,7 +101,8 @@ MonoBehaviour:
   speedRoutesSave:
     routesColor:
     - {r: 1, g: 1, b: 1, a: 1}
-    active: 01
+    - {r: 1, g: 1, b: 1, a: 1}
+    active: 0101
   intersectionSave:
     showAll: 0
     showExit: 1

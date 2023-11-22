@@ -8,23 +8,33 @@ public class WheelController : MonoBehaviour
     [SerializeField] WheelCollider backRight;
     [SerializeField] WheelCollider frontLeft;
     [SerializeField] WheelCollider backLeft;
+    private WheelCollider[] wheelColliders;
+
 
     [SerializeField] Transform backLeftTransform;
     [SerializeField] Transform frontRightTransform;
     [SerializeField] Transform frontLeftTransform;
     [SerializeField] Transform backRightTransform;
+    private Transform[] transforms;
 
-
-    private PlayerRouteWaypoint[] playerRoute;
+    // Car specs
     public float maxMotorTorque = 500f; // Maximum torque the motor can apply
     public float maxSteeringAngle = 30f; // Maximum steer angle the wheels can have
     public float brakeTorque = 30000f; // The torque that will be applied when we need the car to stop
+    public Vector3 centreOfMass;
 
+    // Car route information
+    private PlayerRouteWaypoint[] playerRoute;
     private int currentWaypointIndex = 0;
 
-    private void Awake()
+  
+
+    private void Start()
     {
         playerRoute = PlayerRoute.route;
+        GetComponent<Rigidbody>().centerOfMass = centreOfMass;
+        wheelColliders = new WheelCollider[] { backRight, backLeft, frontLeft, frontRight };
+        transforms = new Transform[] { backRightTransform, backLeftTransform, frontLeftTransform, frontRightTransform };
     }
 
 
@@ -37,10 +47,7 @@ public class WheelController : MonoBehaviour
         Drive();
         CheckWaypointDistance();
         Braking();
-        UpdateWheel(frontLeft, frontLeftTransform);
-        UpdateWheel(backRight, backRightTransform);
-        UpdateWheel(frontRight, frontRightTransform);
-        UpdateWheel(backLeft, backLeftTransform);
+        UpdateWheels(wheelColliders, transforms);
     }
 
     private void ApplySteer()
@@ -97,15 +104,19 @@ public class WheelController : MonoBehaviour
     }
 
 
-    void UpdateWheel(WheelCollider wheel, Transform trans)
+    void UpdateWheels(WheelCollider[] wheels, Transform[] trans)
     {
-        // Get wheel collider state
-        Vector3 position;
-        Quaternion rotation;
-        wheel.GetWorldPose(out position, out rotation);
 
-        // Set Wheel transform state
-        trans.position = position;
-        trans.rotation = rotation; 
+        for (int i = 0; i < wheels.Length; i++)
+        {
+            // Get wheel collider state
+            Vector3 position;
+            Quaternion rotation;
+            wheels[i].GetWorldPose(out position, out rotation);
+
+            // Set Wheel transform state
+            trans[i].SetPositionAndRotation(position, rotation);
+        }
+        
     } 
 }

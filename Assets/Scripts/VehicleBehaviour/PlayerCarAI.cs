@@ -4,31 +4,40 @@ using UnityEngine;
 
 public class PlayerCarAI : MonoBehaviour
 {
-    public LayerMask obstacleLayers;
-    public Transform frontOfCar;
-    public float obstacleDetectionDistance = 20f;
-    private WheelController car;
+    public WheelController car;
+    public LayerMask trafficLayer;
+    public float obstacleDetectionDistance = 10f;
+    public Vector3 frontSensorPosition = new(0, 0.2f, 0.5f); // may need to adjust based on car length
+
     // Start is called before the first frame update
     void Start()
     {
         car = GetComponent<WheelController>();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void FixedUpdate()
     {
-        
+        DetectObstacle();
     }
+
+
     void DetectObstacle()
     {
         RaycastHit hit;
-
-        Vector3 sensorStartPos = frontOfCar.position;
+        Vector3 sensorStartPos = transform.position;
+        sensorStartPos += transform.forward * frontSensorPosition.z;
+        sensorStartPos += transform.up * frontSensorPosition.y;
        
-        // forward sensor
-        if (Physics.Raycast(sensorStartPos, transform.forward, out hit, obstacleDetectionDistance, obstacleLayers))
+        // front centre sensor
+        if (Physics.Raycast(sensorStartPos, transform.forward, out hit, obstacleDetectionDistance, trafficLayer))
         {
+            Debug.DrawLine(sensorStartPos, hit.point);
             // brake here
+            car.ApplyBrake();
+        }
+        else
+        {
+            car.ReleaseBrake();
         }
     }
 }

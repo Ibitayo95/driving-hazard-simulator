@@ -17,10 +17,14 @@ public class WheelController : MonoBehaviour
     [SerializeField] Transform backRightTransform;
     private Transform[] transforms;
 
+    // Car obstacle detection and intelligence
+    public PlayerCarAI carAI;
+
     // Car specs
     public float maxMotorTorque = 500f; // Maximum torque the motor can apply
     public float maxSteeringAngle = 30f; // Maximum steer angle the wheels can have
-    public float brakeTorque = 30000f; // The torque that will be applied when we need the car to stop
+    public float drivingBrakeTorque = 300f; // The torque needed to gently brake to control car
+    public float handBrakeTorque = 1000f; // brings car to a full stop
     public Vector3 centreOfMass;
 
     // Car route information
@@ -33,6 +37,7 @@ public class WheelController : MonoBehaviour
     {
         playerRoute = PlayerRoute.route;
         GetComponent<Rigidbody>().centerOfMass = centreOfMass;
+        carAI = GetComponent<PlayerCarAI>();
         wheelColliders = new WheelCollider[] { backRight, backLeft, frontLeft, frontRight };
         transforms = new Transform[] { backRightTransform, backLeftTransform, frontLeftTransform, frontRightTransform };
     }
@@ -46,7 +51,7 @@ public class WheelController : MonoBehaviour
         ApplySteer();
         Drive();
         CheckWaypointDistance();
-        Braking();
+        CarControl();
         UpdateWheels(wheelColliders, transforms);
     }
 
@@ -66,6 +71,7 @@ public class WheelController : MonoBehaviour
         backRight.motorTorque = maxMotorTorque;
     }
 
+    // Distance to next waypoint on route
     private void CheckWaypointDistance()
     {
         if (Vector3.Distance(transform.position, playerRoute[currentWaypointIndex].transform.position) < 5f)
@@ -74,25 +80,37 @@ public class WheelController : MonoBehaviour
         }
     }
 
-    private void Braking()
+    // Keeps car smooth and steady, no accidents. Car stops when required.
+    private void CarControl()
     {
-        if (Vector3.Distance(transform.position, playerRoute[currentWaypointIndex].transform.position) <= 10f)
-        {
-            ApplyBrake();
-        }
-        else
-        {
-            ReleaseBrake();
+        if (!carAI.DetectObstacle(this)){
+            if (Vector3.Distance(transform.position, playerRoute[currentWaypointIndex].transform.position) <= 10f)
+            {
+                ApplyDrivingBrake();
+            }
+            else
+            {
+                ReleaseBrake();
+            }
         }
     }
 
-    public void ApplyBrake()
+    public void ApplyDrivingBrake()
     {
         // 70 % distribution of braking on the front tyres, 30 % on rear
-        backLeft.brakeTorque = brakeTorque * 0.5f;
-        backRight.brakeTorque = brakeTorque * 0.5f;
-        frontLeft.brakeTorque = brakeTorque * 1.5f;
-        frontRight.brakeTorque = brakeTorque * 1.5f;
+        backLeft.brakeTorque = drivingBrakeTorque * 0.5f;
+        backRight.brakeTorque = drivingBrakeTorque * 0.5f;
+        frontLeft.brakeTorque = drivingBrakeTorque * 1.5f;
+        frontRight.brakeTorque = drivingBrakeTorque * 1.5f;
+    }
+
+    public void ApplyHandBrake()
+    {
+        // 70 % distribution of braking on the front tyres, 30 % on rear
+        backLeft.brakeTorque =  handBrakeTorque * 0.5f;
+        backRight.brakeTorque = handBrakeTorque * 0.5f;
+        frontLeft.brakeTorque = handBrakeTorque * 1.5f;
+        frontRight.brakeTorque = handBrakeTorque * 1.5f;
     }
 
     public void ReleaseBrake()
@@ -103,7 +121,7 @@ public class WheelController : MonoBehaviour
         frontRight.brakeTorque = 0;
     }
 
-
+    // Updates the visual appearance of wheels rotating
     void UpdateWheels(WheelCollider[] wheels, Transform[] trans)
     {
 

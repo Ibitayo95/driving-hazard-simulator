@@ -11,6 +11,7 @@ public class CarController : MonoBehaviour
     private WheelCollider[] wheelColliders;
 
 
+
     [SerializeField] Transform backLeftTransform;
     [SerializeField] Transform frontRightTransform;
     [SerializeField] Transform frontLeftTransform;
@@ -83,25 +84,30 @@ public class CarController : MonoBehaviour
     // Keeps car smooth and steady, no accidents. Car stops when required.
     private void CarControl()
     {
-        if (!carAI.DetectObstacle(this)){
-            if (Vector3.Distance(transform.position, playerRoute[currentWaypointIndex].transform.position) <= 10f)
-            {
-                ApplyDrivingBrake();
-            }
-            else
-            {
-                ReleaseBrake();
-            }
+        if (carAI.DetectObstacle(this)) return;
+
+        bool isNearWaypoint = Vector3.Distance(transform.position, playerRoute[currentWaypointIndex].transform.position) <= 10f;
+        bool isMovingFast = GetComponent<Rigidbody>().velocity.magnitude > 1.5;
+
+        if (isNearWaypoint && isMovingFast)
+        {
+            ApplyDrivingBrake();
+            return;
         }
+
+        ReleaseBrake();
     }
 
     public void ApplyDrivingBrake()
     {
         // 70 % distribution of braking on the front tyres, 30 % on rear
-        backLeft.brakeTorque = drivingBrakeTorque * 0.5f;
-        backRight.brakeTorque = drivingBrakeTorque * 0.5f;
-        frontLeft.brakeTorque = drivingBrakeTorque * 1.5f;
-        frontRight.brakeTorque = drivingBrakeTorque * 1.5f;
+
+            backLeft.brakeTorque = drivingBrakeTorque * 0.5f;
+            backRight.brakeTorque = drivingBrakeTorque * 0.5f;
+            frontLeft.brakeTorque = drivingBrakeTorque * 1.5f;
+            frontRight.brakeTorque = drivingBrakeTorque * 1.5f;
+        
+        
     }
 
     public void ApplyHandBrake()

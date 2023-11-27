@@ -32,7 +32,7 @@ public class PlayerCarAI : MonoBehaviour
         }
 
         // front left sensor
-        if (Physics.Raycast(sensorStartPos - transform.right * frontSensorWidth, transform.forward, out hit, obstacleDetectionDistance, trafficLayer))
+        else if (Physics.Raycast(sensorStartPos - transform.right * frontSensorWidth, transform.forward, out hit, obstacleDetectionDistance, trafficLayer))
         {
             Debug.DrawLine(sensorStartPos - transform.right * frontSensorWidth, hit.point);
             // brake here
@@ -41,7 +41,7 @@ public class PlayerCarAI : MonoBehaviour
         }
 
         // front right sensor
-        if (Physics.Raycast(sensorStartPos + transform.right * frontSensorWidth, transform.forward, out hit, obstacleDetectionDistance, trafficLayer))
+        else if (Physics.Raycast(sensorStartPos + transform.right * frontSensorWidth, transform.forward, out hit, obstacleDetectionDistance, trafficLayer))
         {
             Debug.DrawLine(sensorStartPos + transform.right * frontSensorWidth, hit.point);
             // brake here

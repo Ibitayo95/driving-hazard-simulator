@@ -27,7 +27,7 @@ namespace PolyPerfect.City
         }
         void Start()
         {
-            maxspeed = Random.Range(2f, 3f);
+            maxspeed = Random.Range(1f, 2f);
             start = transform.position;
             if (randomDestination)
             {

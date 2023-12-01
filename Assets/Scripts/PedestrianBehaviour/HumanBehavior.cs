@@ -182,12 +182,29 @@ namespace PolyPerfect.City
                     trafic.lightChange += StartMoving;
                 }
             }
+
+            if (other.gameObject.layer == LayerMask.NameToLayer("Traffic"))
+            {
+                isMoving = false;
+            }
+            if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
+            {
+                isMoving = false;
+            }
         }
         private void OnTriggerExit(Collider other)
         {
             if (other.CompareTag("TrafficLightCrosswalk"))
             {
                 other.GetComponentInParent<TrafficLight>().lightChange -= StartMoving;
+            }
+            if (other.gameObject.layer == LayerMask.NameToLayer("Traffic"))
+            {
+                isMoving = true;
+            }
+            if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
+            {
+                isMoving = true;
             }
         }
         void StartMoving(bool isGreen)

@@ -6,11 +6,10 @@ public class PlayerCarAI : MonoBehaviour
 {
     public LayerMask trafficLayer;
     public LayerMask obstacleLayer;
-    public LayerMask[] layers; 
+    public LayerMask[] layers;
     public float obstacleDetectionDistance = 5f;
-    public Vector3 frontSensorPosition = new(0, 1f, 2.5f); // may need to adjust based on car length
-    public float frontSensorWidth = 1.5f; // adjust based on car width
-    public float frontBackupSensorWidth = 0.68f;
+    public Vector3 frontSensorPosition = new Vector3(0, 1f, 2.5f);
+    public float[] sensorWidths = new float[] { 1.5f, 0.68f };  // array of sensor widths
 
     // Start is called before the first frame update
     void Start()
@@ -18,67 +17,30 @@ public class PlayerCarAI : MonoBehaviour
         layers = new LayerMask[] { trafficLayer, obstacleLayer };
     }
 
-
     public bool DetectObstacle(CarController car)
     {
-        RaycastHit hit;
-        // Compute sensor position in world space
         Vector3 sensorStartPos = transform.TransformPoint(frontSensorPosition);
 
         foreach (LayerMask layer in layers)
         {
-            // front centre sensor
-            if (Physics.Raycast(sensorStartPos, transform.forward, out hit, obstacleDetectionDistance, layer))
+            // Center, left, and right sensors
+            foreach (float sensorWidth in sensorWidths)
             {
-       
-                Debug.DrawLine(sensorStartPos, hit.point);
-                // brake here
-                car.ApplyHandBrake();
-                return true;
+                // Check for obstacles with sensors at three positions: middle, left and right
+                for (int i = -1; i <= 1; i++)
+                {
+                    Vector3 sensorPosition = sensorStartPos + i * transform.right * sensorWidth;
+                    if (Physics.Raycast(sensorPosition, transform.forward, out RaycastHit hit, obstacleDetectionDistance, layer))
+                    {
+                        Debug.DrawLine(sensorPosition, hit.point);
+                        car.ApplyHandBrake();
+                        return true;
+                    }
+                }
             }
-
-            // front left sensor
-            else if (Physics.Raycast(sensorStartPos - transform.right * frontSensorWidth, transform.forward, out hit, obstacleDetectionDistance, layer))
-            {
-                Debug.DrawLine(sensorStartPos - transform.right * frontSensorWidth, hit.point);
-                // brake here
-                car.ApplyHandBrake();
-                return true;
-            }
-
-            // front right sensor
-            else if (Physics.Raycast(sensorStartPos + transform.right * frontSensorWidth, transform.forward, out hit, obstacleDetectionDistance, layer))
-            {
-                Debug.DrawLine(sensorStartPos + transform.right * frontSensorWidth, hit.point);
-                // brake here
-                car.ApplyHandBrake();
-                 return true;
-            }
-            // front left sensor
-            else if (Physics.Raycast(sensorStartPos - transform.right * frontBackupSensorWidth, transform.forward, out hit, obstacleDetectionDistance, layer))
-            {
-                Debug.DrawLine(sensorStartPos - transform.right * frontBackupSensorWidth, hit.point);
-                // brake here
-                car.ApplyHandBrake();
-                return true;
-            }
-
-            // front right sensor
-            else if (Physics.Raycast(sensorStartPos + transform.right * frontBackupSensorWidth, transform.forward, out hit, obstacleDetectionDistance, layer))
-            {
-                Debug.DrawLine(sensorStartPos + transform.right * frontBackupSensorWidth, hit.point);
-                // brake here
-                car.ApplyHandBrake();
-                return true;
-            }
-
-
-            else
-            {
-                car.ReleaseBrake();
-            }
-            
         }
+
+        car.ReleaseBrake();
         return false;
     }
 }

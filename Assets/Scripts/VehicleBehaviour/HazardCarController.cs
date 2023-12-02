@@ -52,6 +52,12 @@ public class HazardCarController : MonoBehaviour
     {
         if (hazardRoute.Length == 0) return;
         if (!hazardActivated) return;
+        // when we get to the end of the route, we deactivate the hazard and return
+        if (currentWaypointIndex == hazardRoute.Length)
+        {
+            hazardActivated = false;
+            return;
+        }
 
         ApplySteer();
         Drive();
@@ -83,12 +89,6 @@ public class HazardCarController : MonoBehaviour
     // Distance to next waypoint on route
     private void CheckWaypointDistance()
     {
-        // when we get to the end of the route, we deactivate the hazard and return
-        if (currentWaypointIndex == hazardRoute.Length)
-        {
-            hazardActivated = false;
-            return;
-        }
 
         if (Vector3.Distance(transform.position, hazardRoute[currentWaypointIndex].transform.position) < 5f)
         {

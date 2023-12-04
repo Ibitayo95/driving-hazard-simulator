@@ -150,7 +150,7 @@ public class CarController : MonoBehaviour
     // if human is hit, ragdoll physics occurs
     void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("HazardHuman"))
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Humans"))
         {
             // Calculate the direction from the vehicle to the pedestrian
             Vector3 direction = collision.transform.position - transform.position;

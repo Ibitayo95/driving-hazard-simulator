@@ -13,6 +13,7 @@ TagManager:
   - TrafficLightCrosswalk
   - Anchor
   - HazardHuman
+  - HazardCar
   layers:
   - Default
   - TransparentFX
@@ -25,8 +26,8 @@ TagManager:
   - Buildings
   - Obstacles
   - Player
-  - 
-  - 
+  - HazardCar
+  - HazardHuman
   - 
   - 
   - 

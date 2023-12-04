@@ -21,7 +21,7 @@ public class RagdollActivator : MonoBehaviour
     {
         // Disable the Animator
         animator.enabled = false;
-
+        
         // Enable all the rigidbodies
         foreach (var body in GetComponentsInChildren<Rigidbody>())
         {

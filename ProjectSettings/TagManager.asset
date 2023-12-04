@@ -11,6 +11,8 @@ TagManager:
   - LevelCrossing
   - TrafficLight
   - TrafficLightCrosswalk
+  - Anchor
+  - HazardHuman
   layers:
   - Default
   - TransparentFX

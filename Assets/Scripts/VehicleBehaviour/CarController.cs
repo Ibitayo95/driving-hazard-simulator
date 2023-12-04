@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using PolyPerfect.City;
 using UnityEngine;
 
 public class CarController : MonoBehaviour
@@ -142,5 +143,22 @@ public class CarController : MonoBehaviour
             trans[i].SetPositionAndRotation(position, rotation);
         }
         
-    } 
+    }
+
+
+
+    // if human is hit, ragdoll physics occurs
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("HazardHuman"))
+        {
+            // Calculate the direction from the vehicle to the pedestrian
+            Vector3 direction = collision.transform.position - transform.position;
+            direction = direction.normalized;
+
+            collision.gameObject.GetComponentInParent<RagdollActivator>().HitByVehicle(direction, 5f);
+        }
+    }
+
+
 }

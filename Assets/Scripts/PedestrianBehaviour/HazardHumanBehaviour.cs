@@ -32,6 +32,8 @@ public class HazardHumanBehaviour : MonoBehaviour
         }
         else
         {
+            // ensure animator is either running or walking
+            ActivateAnimations();
             MoveToNextWaypoint();
         }
         
@@ -47,9 +49,6 @@ public class HazardHumanBehaviour : MonoBehaviour
     private void MoveToNextWaypoint()
     {
         
-        // ensure animator is either running or walking
-        ActivateAnimations();
-      
         // move to next waypoint
         if (Vector3.Distance(transform.position, waypoints[currentWP].position) < 1f)
         {

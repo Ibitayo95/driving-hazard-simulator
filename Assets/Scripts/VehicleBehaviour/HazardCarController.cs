@@ -23,7 +23,7 @@ public class HazardCarController : MonoBehaviour
     [SerializeField] Transform backRightTransform;
     private Transform[] transforms;
 
- 
+
 
     // Car specs
     public float maxMotorTorque = 500f; // Maximum torque the motor can apply
@@ -34,6 +34,7 @@ public class HazardCarController : MonoBehaviour
 
     // Car route information
     public Transform[] waypoints;
+    public bool isReversing;
     private int currentWaypointIndex = 0;
     private bool hazardActivated = false;
 
@@ -74,16 +75,31 @@ public class HazardCarController : MonoBehaviour
     {
         Vector3 relativeVector = transform.InverseTransformPoint(waypoints[currentWaypointIndex].position);
         float newSteer = (relativeVector.x / relativeVector.magnitude) * maxSteeringAngle;
+        if (isReversing)
+        {
+            newSteer *= -1; // reverse the steering direction when reversing
+        }
         frontLeft.steerAngle = newSteer;
         frontRight.steerAngle = newSteer;
     }
 
     private void Drive()
     {
-        frontLeft.motorTorque = maxMotorTorque;
-        frontRight.motorTorque = maxMotorTorque;
-        backLeft.motorTorque = maxMotorTorque;
-        backRight.motorTorque = maxMotorTorque;
+        if (isReversing)
+        {
+            frontLeft.motorTorque = -maxMotorTorque * 0.75f;
+            frontRight.motorTorque = -maxMotorTorque * 0.75f;
+            backLeft.motorTorque = -maxMotorTorque * 0.75f;
+            backRight.motorTorque = -maxMotorTorque * 0.75f;
+        }
+        else
+        {
+            frontLeft.motorTorque = maxMotorTorque;
+            frontRight.motorTorque = maxMotorTorque;
+            backLeft.motorTorque = maxMotorTorque;
+            backRight.motorTorque = maxMotorTorque;
+        }
+
     }
 
     // Distance to next waypoint on route
@@ -162,4 +178,3 @@ public class HazardCarController : MonoBehaviour
         }
     }
 }
-

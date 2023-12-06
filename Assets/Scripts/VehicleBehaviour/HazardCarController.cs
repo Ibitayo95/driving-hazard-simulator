@@ -33,7 +33,7 @@ public class HazardCarController : MonoBehaviour
     public Vector3 centreOfMass;
 
     // Car route information
-    private HazardRouteWaypoint[] hazardRoute;
+    public Transform[] waypoints;
     private int currentWaypointIndex = 0;
     private bool hazardActivated = false;
 
@@ -41,7 +41,6 @@ public class HazardCarController : MonoBehaviour
 
     private void Start()
     {
-        hazardRoute = GetComponentsInChildren<HazardRouteWaypoint>();
         GetComponent<Rigidbody>().centerOfMass = centreOfMass;
         wheelColliders = new WheelCollider[] { backRight, backLeft, frontLeft, frontRight };
         transforms = new Transform[] { backRightTransform, backLeftTransform, frontLeftTransform, frontRightTransform };
@@ -50,10 +49,10 @@ public class HazardCarController : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (hazardRoute.Length == 0) return;
+        if (waypoints.Length == 0) return;
         if (!hazardActivated) return;
         // when we get to the end of the route, we deactivate the hazard and return
-        if (currentWaypointIndex == hazardRoute.Length)
+        if (currentWaypointIndex == waypoints.Length)
         {
             hazardActivated = false;
             return;
@@ -65,6 +64,7 @@ public class HazardCarController : MonoBehaviour
         UpdateWheels(wheelColliders, transforms);
     }
 
+    [ContextMenu("Activate")]
     public void ActivateHazard()
     {
         hazardActivated = true;
@@ -72,7 +72,7 @@ public class HazardCarController : MonoBehaviour
 
     private void ApplySteer()
     {
-        Vector3 relativeVector = transform.InverseTransformPoint(hazardRoute[currentWaypointIndex].transform.position);
+        Vector3 relativeVector = transform.InverseTransformPoint(waypoints[currentWaypointIndex].position);
         float newSteer = (relativeVector.x / relativeVector.magnitude) * maxSteeringAngle;
         frontLeft.steerAngle = newSteer;
         frontRight.steerAngle = newSteer;
@@ -90,7 +90,7 @@ public class HazardCarController : MonoBehaviour
     private void CheckWaypointDistance()
     {
 
-        if (Vector3.Distance(transform.position, hazardRoute[currentWaypointIndex].transform.position) < 5f)
+        if (Vector3.Distance(transform.position, waypoints[currentWaypointIndex].position) < 5f)
         {
             currentWaypointIndex++;
         }
@@ -142,6 +142,24 @@ public class HazardCarController : MonoBehaviour
             trans[i].SetPositionAndRotation(position, rotation);
         }
 
+    }
+
+    // to visualise the pedestrian's waypoints/route
+    private void OnDrawGizmos()
+    {
+        if (waypoints.Length == 0) return;
+        foreach (Transform t in waypoints)
+        {
+            Gizmos.color = Color.blue;
+            Gizmos.DrawWireSphere(t.position, 0.5f);
+        }
+
+        Gizmos.color = Color.red;
+        // lines that connect the route of waypoints
+        for (int i = 0; i < waypoints.Length - 1; i++)
+        {
+            Gizmos.DrawLine(waypoints[i].position, waypoints[i + 1].position);
+        }
     }
 }
 

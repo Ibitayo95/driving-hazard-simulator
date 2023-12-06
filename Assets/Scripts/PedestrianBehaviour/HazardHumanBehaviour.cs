@@ -7,7 +7,7 @@ public class HazardHumanBehaviour : MonoBehaviour
     private Animator animator;
     private bool hazardActivated = false;
     private bool setAnimation = false;
-    private float rotationSpeed = 2.0f;
+    private float rotationSpeed = 5.0f;
     private int currentWP = 0;
 
     // tinker with these in the editor
@@ -16,7 +16,7 @@ public class HazardHumanBehaviour : MonoBehaviour
     public float walkingSpeed = 2.0f;
     public float runningSpeed = 4.0f;
 
-    private void Awake()
+    void Start()
     {
         animator = GetComponent<Animator>();
     }
@@ -27,20 +27,17 @@ public class HazardHumanBehaviour : MonoBehaviour
         if (currentWP >= waypoints.Length) // check if we have reached the destination
         {
             hazardActivated = false;
-            if (isRunning)
-            {
-                animator.SetBool("Running", false);
-            }
-            else
-            {
-                animator.SetBool("Walking", false);
-            }
-            setAnimation = false;
+            DeactivateAnimations();
             return;
         }
-        MoveToNextWaypoint();
+        else
+        {
+            MoveToNextWaypoint();
+        }
+        
     }
 
+    [ContextMenu("Activate")]
     public void ActivateHazard()
     {
         currentWP = 0;
@@ -49,7 +46,49 @@ public class HazardHumanBehaviour : MonoBehaviour
 
     private void MoveToNextWaypoint()
     {
+        
         // ensure animator is either running or walking
+        ActivateAnimations();
+      
+        // move to next waypoint
+        if (Vector3.Distance(transform.position, waypoints[currentWP].position) < 1f)
+        {
+            currentWP++;
+        }
+        if (currentWP >= waypoints.Length) return;
+
+        
+        Quaternion direction = Quaternion.LookRotation(waypoints[currentWP].position - transform.position);
+        transform.rotation = Quaternion.Slerp(transform.rotation, direction, rotationSpeed * Time.deltaTime);
+
+        if (isRunning)
+        {
+            transform.Translate(0, 0, runningSpeed * Time.deltaTime);
+        }
+        else
+        {
+            transform.Translate(0, 0, walkingSpeed * Time.deltaTime);
+        }
+
+        
+    }
+
+    private void DeactivateAnimations()
+    {
+        if (isRunning)
+        {
+            animator.SetBool("Running", false);
+        }
+        else
+        {
+            animator.SetBool("Walking", false);
+        }
+        setAnimation = false;
+        return;
+    }
+
+    private void ActivateAnimations()
+    {
         if (!setAnimation)
         {
             if (isRunning)
@@ -62,29 +101,12 @@ public class HazardHumanBehaviour : MonoBehaviour
             }
             setAnimation = true;
         }
-
-        // move to next waypoint
-        if (Vector3.Distance(transform.position, waypoints[currentWP].position) < 3f)
-        {
-            currentWP++;
-        }
-
-        Quaternion direction = Quaternion.LookRotation(waypoints[currentWP].position - transform.position);
-        transform.rotation = Quaternion.Slerp(transform.rotation, direction, rotationSpeed * Time.deltaTime);
-
-        if (isRunning)
-        {
-            transform.Translate(0, 0, runningSpeed * Time.deltaTime);
-        }
-        else
-        {
-            transform.Translate(0, 0, walkingSpeed * Time.deltaTime);
-        }
     }
 
     // to visualise the pedestrian's waypoints/route
     private void OnDrawGizmos()
     {
+        if (waypoints.Length == 0) return;
         foreach (Transform t in waypoints)
         {
             Gizmos.color = Color.blue;

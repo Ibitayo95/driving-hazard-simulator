@@ -2,8 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HazardHumanBehaviour : MonoBehaviour
+public class HazardHumanBehaviour : MonoBehaviour, IHazardObject
 {
+    // Hazard identifier
+    public string Name;
+
     private Animator animator;
     private bool hazardActivated = false;
     private bool setAnimation = false;
@@ -105,7 +108,7 @@ public class HazardHumanBehaviour : MonoBehaviour
     // to visualise the pedestrian's waypoints/route
     private void OnDrawGizmos()
     {
-        if (waypoints.Length == 0) return;
+        if (waypoints == null || waypoints.Length == 0) return;
         foreach (Transform t in waypoints)
         {
             Gizmos.color = Color.blue;

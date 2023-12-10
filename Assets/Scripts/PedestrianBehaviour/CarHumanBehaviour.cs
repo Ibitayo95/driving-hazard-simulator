@@ -2,8 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CarHumanBehaviour : MonoBehaviour
+public class CarHumanBehaviour : MonoBehaviour, IHazardObject
 {
+    // Hazard identifier
+    public string Name;
+
     // set these in the editor
     public Animator carAnimator; // e.g. car door opens
     public Animator humanAnimator; // human gets out

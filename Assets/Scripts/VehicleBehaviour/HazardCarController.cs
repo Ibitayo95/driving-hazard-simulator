@@ -7,8 +7,11 @@ using UnityEngine;
  * of slowing down behaviour and the following of a special short hazard route.
  * Hazard waypoints will be put inside the car's gameobject.
  */
-public class HazardCarController : MonoBehaviour
+public class HazardCarController : MonoBehaviour, IHazardObject
 {
+    // Hazard identifier
+    public string Name;
+
     [SerializeField] WheelCollider frontRight;
     [SerializeField] WheelCollider backRight;
     [SerializeField] WheelCollider frontLeft;
@@ -160,10 +163,10 @@ public class HazardCarController : MonoBehaviour
 
     }
 
-    // to visualise the pedestrian's waypoints/route
+    // to visualise the car's waypoints/route
     private void OnDrawGizmos()
     {
-        if (waypoints.Length == 0) return;
+        if (waypoints == null || waypoints.Length == 0) return;
         foreach (Transform t in waypoints)
         {
             Gizmos.color = Color.blue;

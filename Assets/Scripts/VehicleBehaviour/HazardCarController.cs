@@ -163,6 +163,19 @@ public class HazardCarController : MonoBehaviour, IHazardObject
 
     }
 
+    // if human is hit, ragdoll physics occurs
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Humans"))
+        {
+            // Calculate the direction from the vehicle to the pedestrian
+            Vector3 direction = collision.transform.position - transform.position;
+            direction = direction.normalized;
+
+            collision.gameObject.GetComponentInParent<RagdollActivator>().HitByVehicle(direction, 5f);
+        }
+    }
+
     // to visualise the car's waypoints/route
     private void OnDrawGizmos()
     {

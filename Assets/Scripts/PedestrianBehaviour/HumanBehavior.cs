@@ -16,6 +16,7 @@ namespace PolyPerfect.City
         private float speed;
         private int activepoint = 0;
         private int activePath = 0;
+        private float rotationSpeed = 2.5f;
         bool isMoving = false;
         private Vector3 targetPoint;
         public Vector3 destination;
@@ -56,6 +57,7 @@ namespace PolyPerfect.City
                     MoveToNextPoint();
                 }
                 Vector3 direction = targetPoint - transform.position;
+                Quaternion rotation = Quaternion.LookRotation(targetPoint - transform.position);
 
                 speed = Mathf.Lerp(speed, maxspeed, Time.deltaTime);
                 if (speed > maxspeed)
@@ -69,7 +71,7 @@ namespace PolyPerfect.City
                 if (direction != Vector3.zero)
                 {
                     direction.y = 0;
-                    transform.rotation = Quaternion.LookRotation(direction, Vector3.up);
+                    transform.rotation = Quaternion.Slerp(transform.rotation, rotation, rotationSpeed * Time.deltaTime);
                 }
             }
             else

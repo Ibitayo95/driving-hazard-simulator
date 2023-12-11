@@ -54,18 +54,22 @@ public class HazardCarController : MonoBehaviour, IHazardObject
     void FixedUpdate()
     {
         if (waypoints.Length == 0) return;
-        if (!hazardActivated) return;
+        else if (!hazardActivated) return;
         // when we get to the end of the route, we deactivate the hazard and return
-        if (currentWaypointIndex == waypoints.Length)
+        else if (currentWaypointIndex == waypoints.Length)
         {
             hazardActivated = false;
+            SwitchOffEngine();
             return;
         }
-
-        ApplySteer();
-        Drive();
-        CheckWaypointDistance();
-        UpdateWheels(wheelColliders, transforms);
+        else
+        {
+            ApplySteer();
+            Drive();
+            CheckWaypointDistance();
+            UpdateWheels(wheelColliders, transforms);
+        }
+        
     }
 
     [ContextMenu("Activate")]
@@ -78,10 +82,7 @@ public class HazardCarController : MonoBehaviour, IHazardObject
     {
         Vector3 relativeVector = transform.InverseTransformPoint(waypoints[currentWaypointIndex].position);
         float newSteer = (relativeVector.x / relativeVector.magnitude) * maxSteeringAngle;
-        if (isReversing)
-        {
-            newSteer *= -1; // reverse the steering direction when reversing
-        }
+     
         frontLeft.steerAngle = newSteer;
         frontRight.steerAngle = newSteer;
     }
@@ -113,6 +114,14 @@ public class HazardCarController : MonoBehaviour, IHazardObject
         {
             currentWaypointIndex++;
         }
+    }
+
+    public void SwitchOffEngine()
+    {
+        frontLeft.motorTorque = 0;
+        frontRight.motorTorque = 0;
+        backLeft.motorTorque = 0;
+        backRight.motorTorque = 0;
     }
 
 

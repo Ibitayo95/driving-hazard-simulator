@@ -11,6 +11,7 @@ public class HazardCarController : MonoBehaviour, IHazardObject
 {
     // Hazard identifier
     public string Name;
+    public float hazardOffsetTime;
 
     [SerializeField] WheelCollider frontRight;
     [SerializeField] WheelCollider backRight;

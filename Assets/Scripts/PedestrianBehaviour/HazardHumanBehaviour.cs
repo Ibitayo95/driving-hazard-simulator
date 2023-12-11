@@ -2,10 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class HazardHumanBehaviour : MonoBehaviour, IHazardObject
 {
     // Hazard identifier
     public string Name;
+    public float hazardOffsetTime;
 
     private Animator animator;
     private bool hazardActivated = false;
@@ -111,11 +113,11 @@ public class HazardHumanBehaviour : MonoBehaviour, IHazardObject
         if (waypoints == null || waypoints.Length == 0) return;
         foreach (Transform t in waypoints)
         {
-            Gizmos.color = Color.blue;
+            Gizmos.color = Color.green;
             Gizmos.DrawWireSphere(t.position, 0.5f);
         }
 
-        Gizmos.color = Color.red;
+        Gizmos.color = Color.yellow;
         // lines that connect the route of waypoints
         for (int i = 0; i < waypoints.Length - 1; i++)
         {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-// This script is broken the movement is not good at all - i'll need to edit the waypoints - see animation
+// This script needs to be amended so that the human only follows the waypoints after the animation has been completed
 public class CarHumanBehaviour : MonoBehaviour, IHazardObject
 {
     // Hazard identifier

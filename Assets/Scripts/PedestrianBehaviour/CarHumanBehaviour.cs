@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-// This script needs to be amended so that the human only follows the waypoints after the animation has been completed
+/*
+ *  This script governs the behaviour of a special hazard in which a human exits a car which blocks the road
+ */
 public class CarHumanBehaviour : MonoBehaviour, IHazardObject
 {
     // Hazard identifier
@@ -20,6 +22,7 @@ public class CarHumanBehaviour : MonoBehaviour, IHazardObject
     private bool setAnimation = false;
     private float rotationSpeed = 5.0f;
     private int currentWP = 0;
+    private bool humanHasExitedCar = false;
 
     // tinker with these in the editor
     public Transform[] waypoints;
@@ -48,7 +51,11 @@ public class CarHumanBehaviour : MonoBehaviour, IHazardObject
                 StartCoroutine(ActivateAnimations());
                 setAnimation = true;
             }
-            MoveToNextWaypoint();
+            else if (humanHasExitedCar == true)
+            {
+                MoveToNextWaypoint();
+            }
+            
         }
 
     }
@@ -57,6 +64,7 @@ public class CarHumanBehaviour : MonoBehaviour, IHazardObject
     public void ActivateHazard()
     {
         currentWP = 0;
+        humanHasExitedCar = false;
         hazardActivated = true;
     }
 
@@ -102,6 +110,7 @@ public class CarHumanBehaviour : MonoBehaviour, IHazardObject
         humanAnimator.SetBool("ExitCar", true);
         yield return new WaitForSeconds(2);
 
+        humanHasExitedCar = true;
        
     }
 

@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+// This script is broken the movement is not good at all - i'll need to edit the waypoints - see animation
 public class CarHumanBehaviour : MonoBehaviour, IHazardObject
 {
     // Hazard identifier
@@ -100,8 +102,7 @@ public class CarHumanBehaviour : MonoBehaviour, IHazardObject
         humanAnimator.SetBool("ExitCar", true);
         yield return new WaitForSeconds(2);
 
-        // 4. car door closes
-        carAnimator.SetBool("CloseCarDoor", true);
+       
     }
 
     // to visualise the pedestrian's waypoints/route

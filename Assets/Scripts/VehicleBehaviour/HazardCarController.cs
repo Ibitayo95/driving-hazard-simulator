@@ -10,9 +10,9 @@ using UnityEngine;
 public class HazardCarController : MonoBehaviour, IHazardObject
 {
     // Hazard identifier
-    public string Name { get; set; }
-    public float hazardOffsetTime { get; set; }
-    public int ChanceOfOccuring { get; set; }
+    public string Name;
+    public float hazardOffsetTime;
+    public int ChanceOfOccuring;
 
     [SerializeField] WheelCollider frontRight;
     [SerializeField] WheelCollider backRight;

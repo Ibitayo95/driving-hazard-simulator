@@ -6,9 +6,9 @@ using UnityEngine;
 public class HazardHumanBehaviour : MonoBehaviour, IHazardObject
 {
     // Hazard identifier
-    public string Name { get; set; }
-    public float hazardOffsetTime { get; set; }
-    public int ChanceOfOccuring { get; set; }
+    public string Name;
+    public float hazardOffsetTime;
+    public int ChanceOfOccuring;
 
     private Animator animator;
     private bool hazardActivated = false;

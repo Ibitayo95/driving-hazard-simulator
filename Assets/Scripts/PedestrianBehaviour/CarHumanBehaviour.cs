@@ -5,9 +5,9 @@ using UnityEngine;
 public class CarHumanBehaviour : MonoBehaviour, IHazardObject
 {
     // Hazard identifier
-    public string Name { get; set; }
-    public float hazardOffsetTime { get; set; }
-    public int ChanceOfOccuring { get; set; }
+    public string Name;
+    public float hazardOffsetTime;
+    public int ChanceOfOccuring;
 
     // set these in the editor
     public Animator carAnimator; // e.g. car door opens

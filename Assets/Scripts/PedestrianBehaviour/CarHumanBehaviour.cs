@@ -1,9 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
-public class CarHumanBehaviour : MonoBehaviour
+
+/*
+ *  This script governs the behaviour of a special hazard in which a human exits a car which blocks the road
+ */
+public class CarHumanBehaviour : MonoBehaviour, IHazardObject
 {
+    // Hazard identifier
+    public string Name;
+    public float hazardOffsetTime;
+    public int ChanceOfOccuring;
+
     // set these in the editor
     public Animator carAnimator; // e.g. car door opens
     public Animator humanAnimator; // human gets out
@@ -13,12 +23,15 @@ public class CarHumanBehaviour : MonoBehaviour
     private bool setAnimation = false;
     private float rotationSpeed = 5.0f;
     private int currentWP = 0;
+    private bool humanHasExitedCar = false;
 
     // tinker with these in the editor
     public Transform[] waypoints;
     public bool isRunning = false;
     public float walkingSpeed = 2.0f;
     public float runningSpeed = 4.0f;
+
+
 
     void Start()
     {
@@ -30,6 +43,7 @@ public class CarHumanBehaviour : MonoBehaviour
         if (!hazardActivated) return;
         if (currentWP >= waypoints.Length) // check if we have reached the destination
         {
+            DeactivateAnimations();
             hazardActivated = false;
             setAnimation = false;
             return;
@@ -40,8 +54,14 @@ public class CarHumanBehaviour : MonoBehaviour
             {
                 StartCoroutine(ActivateAnimations());
                 setAnimation = true;
+                
+             
             }
-            MoveToNextWaypoint();
+            else if (humanHasExitedCar == true)
+            {
+                
+                MoveToNextWaypoint();
+            }
         }
 
     }
@@ -50,13 +70,14 @@ public class CarHumanBehaviour : MonoBehaviour
     public void ActivateHazard()
     {
         currentWP = 0;
+        humanHasExitedCar = false;
         hazardActivated = true;
     }
 
     private void MoveToNextWaypoint()
     {
         // move to next waypoint
-        if (Vector3.Distance(transform.position, waypoints[currentWP].position) < 1f)
+        if (Vector3.Distance(transform.position, waypoints[currentWP].position) < 0.8f)
         {
             currentWP++;
         }
@@ -80,7 +101,7 @@ public class CarHumanBehaviour : MonoBehaviour
 
     private void DeactivateAnimations()
     {
-        return;
+        humanAnimator.SetBool("Walking", false);
     }
 
     private IEnumerator ActivateAnimations()
@@ -89,14 +110,16 @@ public class CarHumanBehaviour : MonoBehaviour
         carAnimator.SetBool("OpenCarDoor", true);
 
         // 2. wait for 3 secs (car door is open during this time)
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(2);
 
         // 3. person emerges from car
         humanAnimator.SetBool("ExitCar", true);
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(10);
+        humanHasExitedCar = true;
 
-        // 4. car door closes
-        carAnimator.SetBool("CloseCarDoor", true);
+        // 4. person makes way to waypoint
+        humanAnimator.SetBool("Walking", true);
+
     }
 
     // to visualise the pedestrian's waypoints/route

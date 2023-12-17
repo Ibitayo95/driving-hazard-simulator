@@ -7,8 +7,13 @@ using UnityEngine;
  * of slowing down behaviour and the following of a special short hazard route.
  * Hazard waypoints will be put inside the car's gameobject.
  */
-public class HazardCarController : MonoBehaviour
+public class HazardCarController : MonoBehaviour, IHazardObject
 {
+    // Hazard identifier
+    public string Name;
+    public float hazardOffsetTime;
+    public int ChanceOfOccuring;
+
     [SerializeField] WheelCollider frontRight;
     [SerializeField] WheelCollider backRight;
     [SerializeField] WheelCollider frontLeft;
@@ -51,18 +56,22 @@ public class HazardCarController : MonoBehaviour
     void FixedUpdate()
     {
         if (waypoints.Length == 0) return;
-        if (!hazardActivated) return;
+        else if (!hazardActivated) return;
         // when we get to the end of the route, we deactivate the hazard and return
-        if (currentWaypointIndex == waypoints.Length)
+        else if (currentWaypointIndex == waypoints.Length)
         {
             hazardActivated = false;
+            SwitchOffEngine();
             return;
         }
-
-        ApplySteer();
-        Drive();
-        CheckWaypointDistance();
-        UpdateWheels(wheelColliders, transforms);
+        else
+        {
+            ApplySteer();
+            Drive();
+            CheckWaypointDistance();
+            UpdateWheels(wheelColliders, transforms);
+        }
+        
     }
 
     [ContextMenu("Activate")]
@@ -75,10 +84,7 @@ public class HazardCarController : MonoBehaviour
     {
         Vector3 relativeVector = transform.InverseTransformPoint(waypoints[currentWaypointIndex].position);
         float newSteer = (relativeVector.x / relativeVector.magnitude) * maxSteeringAngle;
-        if (isReversing)
-        {
-            newSteer *= -1; // reverse the steering direction when reversing
-        }
+     
         frontLeft.steerAngle = newSteer;
         frontRight.steerAngle = newSteer;
     }
@@ -110,6 +116,14 @@ public class HazardCarController : MonoBehaviour
         {
             currentWaypointIndex++;
         }
+    }
+
+    public void SwitchOffEngine()
+    {
+        frontLeft.motorTorque = 0;
+        frontRight.motorTorque = 0;
+        backLeft.motorTorque = 0;
+        backRight.motorTorque = 0;
     }
 
 
@@ -160,10 +174,23 @@ public class HazardCarController : MonoBehaviour
 
     }
 
-    // to visualise the pedestrian's waypoints/route
+    // if human is hit, ragdoll physics occurs
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Humans"))
+        {
+            // Calculate the direction from the vehicle to the pedestrian
+            Vector3 direction = collision.transform.position - transform.position;
+            direction = direction.normalized;
+
+            collision.gameObject.GetComponentInParent<RagdollActivator>().HitByVehicle(direction, 5f);
+        }
+    }
+
+    // to visualise the car's waypoints/route
     private void OnDrawGizmos()
     {
-        if (waypoints.Length == 0) return;
+        if (waypoints == null || waypoints.Length == 0) return;
         foreach (Transform t in waypoints)
         {
             Gizmos.color = Color.blue;

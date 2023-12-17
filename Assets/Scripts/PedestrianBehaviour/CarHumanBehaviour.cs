@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 
@@ -30,6 +31,8 @@ public class CarHumanBehaviour : MonoBehaviour, IHazardObject
     public float walkingSpeed = 2.0f;
     public float runningSpeed = 4.0f;
 
+
+
     void Start()
     {
         humanAnimator.Play("idle_sitting", -1, 0f);
@@ -40,6 +43,7 @@ public class CarHumanBehaviour : MonoBehaviour, IHazardObject
         if (!hazardActivated) return;
         if (currentWP >= waypoints.Length) // check if we have reached the destination
         {
+            DeactivateAnimations();
             hazardActivated = false;
             setAnimation = false;
             return;
@@ -50,12 +54,14 @@ public class CarHumanBehaviour : MonoBehaviour, IHazardObject
             {
                 StartCoroutine(ActivateAnimations());
                 setAnimation = true;
+                
+             
             }
             else if (humanHasExitedCar == true)
             {
+                
                 MoveToNextWaypoint();
             }
-            
         }
 
     }
@@ -71,7 +77,7 @@ public class CarHumanBehaviour : MonoBehaviour, IHazardObject
     private void MoveToNextWaypoint()
     {
         // move to next waypoint
-        if (Vector3.Distance(transform.position, waypoints[currentWP].position) < 1f)
+        if (Vector3.Distance(transform.position, waypoints[currentWP].position) < 0.8f)
         {
             currentWP++;
         }
@@ -95,7 +101,7 @@ public class CarHumanBehaviour : MonoBehaviour, IHazardObject
 
     private void DeactivateAnimations()
     {
-        return;
+        humanAnimator.SetBool("Walking", false);
     }
 
     private IEnumerator ActivateAnimations()
@@ -104,14 +110,16 @@ public class CarHumanBehaviour : MonoBehaviour, IHazardObject
         carAnimator.SetBool("OpenCarDoor", true);
 
         // 2. wait for 3 secs (car door is open during this time)
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(2);
 
         // 3. person emerges from car
         humanAnimator.SetBool("ExitCar", true);
-        yield return new WaitForSeconds(2);
-
+        yield return new WaitForSeconds(10);
         humanHasExitedCar = true;
-       
+
+        // 4. person makes way to waypoint
+        humanAnimator.SetBool("Walking", true);
+
     }
 
     // to visualise the pedestrian's waypoints/route

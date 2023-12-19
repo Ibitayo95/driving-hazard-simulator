@@ -11,6 +11,7 @@ public class HazardActivator : MonoBehaviour
 {
     private HazardManager hazardManager;
     private static readonly System.Random oddsGenerator = new();
+
     private int hazardHuman;
     private int hazardCar;
     // set in the editor
@@ -28,6 +29,9 @@ public class HazardActivator : MonoBehaviour
     // could activate the hazard - depends on the chance of it occuring
     private void OnTriggerEnter(Collider other)
     {
+        // ignore if hazard is already occuring (only one can happen at a time)
+        if (hazardManager.hazardActivated) return;
+
         int objectLayer = other.gameObject.layer;
 
         if (objectLayer == hazardHuman || objectLayer == hazardCar) // make sure we've triggered a hazard

@@ -11,6 +11,8 @@ public class HazardManager : MonoBehaviour
     // This dictionary stores the reaction time for each hazard. 
     // If a hazard is not present in the dictionary, it means the user did not react to it.
     private readonly Dictionary<string, float> hazardReactionTimes = new();
+    public bool hazardActivated = false;
+
 
     private void Awake()
     {
@@ -35,8 +37,15 @@ public class HazardManager : MonoBehaviour
     {
         // Activate the hazard 
         hazard.ActivateHazard();
+        hazardActivated = true;
         StartCoroutine(StartReactionTimer(hazard));
 
+    }
+
+    public void ResolveHazard()
+    {
+        // remove the gameobject?
+        hazardActivated = false;
     }
 
     public IEnumerator StartReactionTimer(IHazardObject hazard)
@@ -56,6 +65,7 @@ public class HazardManager : MonoBehaviour
             {
                 // Log the reaction time and end the timer
                 hazardReactionTimes[hazard.Name] = reactionTime;
+                ResolveHazard();
                 yield break;
             }
             // If the user does not react, increment the timer
@@ -65,6 +75,7 @@ public class HazardManager : MonoBehaviour
 
         // If the timer reaches 5 seconds without the user reacting, log that the user did not react to the hazard
         hazardReactionTimes[hazard.Name] = -1;
+        ResolveHazard();
     }
 
 

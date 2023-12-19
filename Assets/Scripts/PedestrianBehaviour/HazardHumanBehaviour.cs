@@ -1,14 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.Serialization;
 using UnityEngine;
 
 
 public class HazardHumanBehaviour : MonoBehaviour, IHazardObject
 {
-    // Hazard identifier
-    public string Name;
-    public float hazardOffsetTime;
-    public int ChanceOfOccuring;
+    // Hazard identifiers
+    [FormerlySerializedAs("Name")][SerializeField] private string _name;
+    public string Name => _name;
+
+    [FormerlySerializedAs("ChanceOfOccuring")][SerializeField] private int _chanceOfOccuring;
+    public int ChanceOfOccuring => _chanceOfOccuring;
+
+    [FormerlySerializedAs("hazardOffsetTime")][SerializeField] private float _hazardOffsetTime;
+    public float HazardOffsetTime => _hazardOffsetTime;
 
     private Animator animator;
     private bool hazardActivated = false;

@@ -57,6 +57,7 @@ public class HazardActivator : MonoBehaviour
             if (hazardOccurance > chance)
             {
                 hazardManager.ActivateHazard(hazard);
+                Debug.Log($"Hazard Triggered: {hazard.Name}");
             }
         }
 

@@ -38,6 +38,7 @@ public class HazardManager : MonoBehaviour
         // Activate the hazard 
         hazard.ActivateHazard();
         hazardActivated = true;
+        Debug.Log("Hazard timer starting...");
         StartCoroutine(StartReactionTimer(hazard));
 
     }
@@ -57,14 +58,17 @@ public class HazardManager : MonoBehaviour
             yield return new WaitForSeconds(offset);
         }
         float reactionTime = 0;
-
+        Debug.Log("Timer has Started!");
         while (reactionTime < 5)
         {
+            Debug.Log($"Time Elapsed: {reactionTime}");
             // Test with pressing space first - will change this to VR input later
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 // Log the reaction time and end the timer
                 hazardReactionTimes[hazard.Name] = reactionTime;
+                Debug.Log($"Hazard SPOTTED! REACTION TIME = {reactionTime} Name = {hazard.Name}");
+
                 ResolveHazard();
                 yield break;
             }
@@ -75,7 +79,9 @@ public class HazardManager : MonoBehaviour
 
         // If the timer reaches 5 seconds without the user reacting, log that the user did not react to the hazard
         hazardReactionTimes[hazard.Name] = -1;
+        Debug.LogWarning($"Hazard not reacted to: {hazard.Name}");
         ResolveHazard();
+
     }
 
 

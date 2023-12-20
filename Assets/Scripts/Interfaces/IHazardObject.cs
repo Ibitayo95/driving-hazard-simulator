@@ -5,4 +5,5 @@
     public int ChanceOfOccuring { get; }
 
     public void ActivateHazard();
+    public void DeactivateHazard();
 }

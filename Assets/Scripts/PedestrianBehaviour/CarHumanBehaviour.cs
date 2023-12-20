@@ -80,6 +80,13 @@ public class CarHumanBehaviour : MonoBehaviour, IHazardObject
         hazardActivated = true;
     }
 
+    [ContextMenu("Deactivate")]
+    public void DeactivateHazard()
+    {
+        hazardActivated = false;
+        Destroy(gameObject, 3.0f);
+    }
+
     private void MoveToNextWaypoint()
     {
         // move to next waypoint

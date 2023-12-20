@@ -38,14 +38,15 @@ public class HazardManager : MonoBehaviour
         // Activate the hazard 
         hazard.ActivateHazard();
         hazardActivated = true;
-        Debug.Log("Hazard timer starting...");
+        Debug.Log("Hazard activated = timer starting...");
         StartCoroutine(StartReactionTimer(hazard));
 
     }
 
-    public void ResolveHazard()
+    public void ResolveHazard(IHazardObject hazard)
     {
-        // remove the gameobject?
+        hazard.DeactivateHazard();
+        Debug.Log("Hazard has been removed.");
         hazardActivated = false;
     }
 
@@ -69,7 +70,7 @@ public class HazardManager : MonoBehaviour
                 hazardReactionTimes[hazard.Name] = reactionTime;
                 Debug.Log($"Hazard SPOTTED! REACTION TIME = {reactionTime} Name = {hazard.Name}");
 
-                ResolveHazard();
+                ResolveHazard(hazard);
                 yield break;
             }
             // If the user does not react, increment the timer
@@ -80,8 +81,7 @@ public class HazardManager : MonoBehaviour
         // If the timer reaches 5 seconds without the user reacting, log that the user did not react to the hazard
         hazardReactionTimes[hazard.Name] = -1;
         Debug.LogWarning($"Hazard not reacted to: {hazard.Name}");
-        ResolveHazard();
-
+        ResolveHazard(hazard);
     }
 
 

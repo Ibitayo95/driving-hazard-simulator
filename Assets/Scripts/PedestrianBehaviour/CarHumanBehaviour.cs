@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 
 /*
@@ -9,10 +10,15 @@ using UnityEngine;
  */
 public class CarHumanBehaviour : MonoBehaviour, IHazardObject
 {
-    // Hazard identifier
-    public string Name;
-    public float hazardOffsetTime;
-    public int ChanceOfOccuring;
+    // Hazard identifiers
+    [FormerlySerializedAs("Name")] [SerializeField] private string _name;
+    public string Name => _name;
+
+    [FormerlySerializedAs("ChanceOfOccuring")] [SerializeField] private int _chanceOfOccuring;
+    public int ChanceOfOccuring => _chanceOfOccuring;
+
+    [FormerlySerializedAs("hazardOffsetTime")] [SerializeField] private float _hazardOffsetTime;
+    public float HazardOffsetTime => _hazardOffsetTime;
 
     // set these in the editor
     public Animator carAnimator; // e.g. car door opens
@@ -72,6 +78,13 @@ public class CarHumanBehaviour : MonoBehaviour, IHazardObject
         currentWP = 0;
         humanHasExitedCar = false;
         hazardActivated = true;
+    }
+
+    [ContextMenu("Deactivate")]
+    public void DeactivateHazard()
+    {
+        hazardActivated = false;
+        Destroy(gameObject, 3.0f);
     }
 
     private void MoveToNextWaypoint()

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.XR.Interaction.Toolkit;
 
 public class HazardManager : MonoBehaviour
@@ -11,7 +12,8 @@ public class HazardManager : MonoBehaviour
     // This dictionary stores the reaction time for each hazard. 
     // If a hazard is not present in the dictionary, it means the user did not react to it.
     private readonly Dictionary<string, float> hazardReactionTimes = new();
-    public bool hazardActivated = false;
+    public bool HazardActivated = false;
+    public int NumberOfHazardsOccurred = 0; 
 
 
     private void Awake()
@@ -28,6 +30,15 @@ public class HazardManager : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+        if (NumberOfHazardsOccurred % 5 == 0)
+        {
+            StartCoroutine(Delay());
+            SceneManager.LoadScene("Summary");
+        }
+    }
+
     public HazardManager GetInstance()
     {
         return Instance;
@@ -37,7 +48,7 @@ public class HazardManager : MonoBehaviour
     {
         // Activate the hazard 
         hazard.ActivateHazard();
-        hazardActivated = true;
+        HazardActivated = true;
         Debug.Log("Hazard activated = timer starting...");
         StartCoroutine(StartReactionTimer(hazard));
 
@@ -47,7 +58,15 @@ public class HazardManager : MonoBehaviour
     {
         hazard.DeactivateHazard();
         Debug.Log("Hazard has been removed.");
-        hazardActivated = false;
+        HazardActivated = false;
+
+        NumberOfHazardsOccurred++;
+    }
+
+    
+    public IEnumerator Delay()
+    {
+        yield return new WaitForSeconds(3); // so when final hazard occurs, the transition isnt sudden   
     }
 
     public IEnumerator StartReactionTimer(IHazardObject hazard)

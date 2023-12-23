@@ -30,7 +30,7 @@ public class HazardActivator : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         // ignore if hazard is already occuring (only one can happen at a time)
-        if (hazardManager.hazardActivated) return;
+        if (hazardManager.HazardActivated) return;
 
         int objectLayer = other.gameObject.layer;
 

@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using HazardManagement;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 using UnityEngine.XR.Interaction.Toolkit;
 
 public class HazardManager : MonoBehaviour
@@ -13,6 +15,7 @@ public class HazardManager : MonoBehaviour
     // This dictionary stores the reaction time for each hazard. 
     // If a hazard is not present in the dictionary, it means the user did not react to it.
     private readonly Queue<HazardDto> _hazards = new();
+    public bool isSummarySceneLoading = false;
     public bool HazardActivated = false;
     public int NumberOfHazardsOccurred = 0; 
 
@@ -33,17 +36,24 @@ public class HazardManager : MonoBehaviour
 
     private void Update()
     {
-        if (NumberOfHazardsOccurred % 5 == 0)
+        if (NumberOfHazardsOccurred % 5 == 0 && !isSummarySceneLoading)
         {
-            StartCoroutine(Delay());
-            SceneManager.LoadScene("Summary");
+            StartCoroutine(LoadSummaryAfterDelay());
         }
     }
-
+    
     public HazardManager GetInstance()
     {
         return Instance;
     }
+    
+    private IEnumerator LoadSummaryAfterDelay()
+    {
+        isSummarySceneLoading = true;
+        yield return StartCoroutine(Delay());
+        SceneManager.LoadScene("Summary");
+    }
+    
 
     public void ActivateHazard(IHazardObject hazard)
     {
@@ -120,6 +130,18 @@ public class HazardManager : MonoBehaviour
         }
 
         return (numCorrectlyIdentified / numHazards) * 100;
+    }
+
+    // Retrieves hazards and empties the queue
+    public HazardDto[] GetHazards()
+    {
+        HazardDto[] hazardList = new HazardDto[_hazards.Count];
+        for (int i = 0; i < _hazards.Count(); i++)
+        {
+            hazardList[i] = _hazards.Dequeue();
+        }
+
+        return hazardList;
     }
 }
 

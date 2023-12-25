@@ -22,6 +22,7 @@ public class HazardActivator : MonoBehaviour
     void Start()
     {
         hazardManager = hazardManager.GetInstance();
+        hazardManager.isSummarySceneLoading = false; 
         hazardHuman = LayerMask.NameToLayer("Humans");
         hazardCar = LayerMask.NameToLayer("HazardCar");
     }

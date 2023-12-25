@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using HazardManagement;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -11,7 +12,7 @@ public class HazardManager : MonoBehaviour
 
     // This dictionary stores the reaction time for each hazard. 
     // If a hazard is not present in the dictionary, it means the user did not react to it.
-    private readonly Dictionary<string, float> hazardReactionTimes = new();
+    private readonly Queue<HazardDto> _hazards = new();
     public bool HazardActivated = false;
     public int NumberOfHazardsOccurred = 0; 
 
@@ -71,6 +72,7 @@ public class HazardManager : MonoBehaviour
 
     public IEnumerator StartReactionTimer(IHazardObject hazard)
     {
+        HazardDto newHazard = new HazardDto { Description = hazard.Name, ReactionTime = -1 };
         // get the hazard's offsetTime first and wait for that number of seconds. Then start the timer 
         float offset = hazard.HazardOffsetTime;
         if (offset > 0)
@@ -86,7 +88,8 @@ public class HazardManager : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 // Log the reaction time and end the timer
-                hazardReactionTimes[hazard.Name] = reactionTime;
+                newHazard.ReactionTime = reactionTime;
+                _hazards.Enqueue(newHazard);
                 Debug.Log($"Hazard SPOTTED! REACTION TIME = {reactionTime} Name = {hazard.Name}");
 
                 ResolveHazard(hazard);
@@ -97,8 +100,7 @@ public class HazardManager : MonoBehaviour
             yield return null;
         }
 
-        // If the timer reaches 5 seconds without the user reacting, log that the user did not react to the hazard
-        hazardReactionTimes[hazard.Name] = -1;
+        // If the timer reaches 5 seconds without the user reacting, then HRT stays as default -1
         Debug.LogWarning($"Hazard not reacted to: {hazard.Name}");
         ResolveHazard(hazard);
     }
@@ -106,12 +108,12 @@ public class HazardManager : MonoBehaviour
 
     public float GetAccuracyScore()
     {
-        float numHazards = hazardReactionTimes.Count;
+        float numHazards = _hazards.Count;
         float numCorrectlyIdentified = 0;
 
-        foreach (KeyValuePair<string, float> entry in hazardReactionTimes)
+        foreach (HazardDto hz in _hazards)
         {
-            if (entry.Value != -1)
+            if (hz.ReactionTime != -1)
             {
                 numCorrectlyIdentified++;
             }

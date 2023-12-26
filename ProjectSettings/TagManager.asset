@@ -13,6 +13,10 @@ TagManager:
   - TrafficLightCrosswalk
   - Anchor
   - HazardHuman
+  - Description
+  - ResponseTime
+  - Spotlight
+  - HazardSummary
   layers:
   - Default
   - TransparentFX

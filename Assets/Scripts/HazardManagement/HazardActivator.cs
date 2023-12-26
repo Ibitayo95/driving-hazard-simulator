@@ -22,6 +22,7 @@ public class HazardActivator : MonoBehaviour
     void Start()
     {
         hazardManager = hazardManager.GetInstance();
+        hazardManager.isSummarySceneLoading = false; 
         hazardHuman = LayerMask.NameToLayer("Humans");
         hazardCar = LayerMask.NameToLayer("HazardCar");
     }
@@ -30,7 +31,7 @@ public class HazardActivator : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         // ignore if hazard is already occuring (only one can happen at a time)
-        if (hazardManager.hazardActivated) return;
+        if (hazardManager.HazardActivated) return;
 
         int objectLayer = other.gameObject.layer;
 

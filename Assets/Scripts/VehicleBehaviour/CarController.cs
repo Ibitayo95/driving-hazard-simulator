@@ -32,8 +32,8 @@ public class CarController : MonoBehaviour
     // Car route information
     private PlayerRouteWaypoint[] playerRoute;
     private int currentWaypointIndex = 0;
+    
 
-  
 
     private void Start()
     {
@@ -42,6 +42,14 @@ public class CarController : MonoBehaviour
         carAI = GetComponent<PlayerCarAI>();
         wheelColliders = new WheelCollider[] { backRight, backLeft, frontLeft, frontRight };
         transforms = new Transform[] { backRightTransform, backLeftTransform, frontLeftTransform, frontRightTransform };
+
+        if (SimulationConfig.CarPositionRandomised)
+        {
+            // set waypoint to random viable position
+            currentWaypointIndex = SimulationConfig.random.Next(0, playerRoute.Length);
+            // set position
+            transform.position = playerRoute[currentWaypointIndex].transform.position;
+        }
     }
 
 

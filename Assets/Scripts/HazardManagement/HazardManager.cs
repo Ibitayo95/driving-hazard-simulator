@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -77,7 +78,7 @@ public class HazardManager : MonoBehaviour
     
     public IEnumerator Delay()
     {
-        yield return new WaitForSeconds(3); // so when final hazard occurs, the transition isnt sudden   
+        yield return new WaitForSeconds(1); // so when final hazard occurs, the transition isnt sudden   
     }
 
     public IEnumerator StartReactionTimer(IHazardObject hazard)
@@ -132,6 +133,22 @@ public class HazardManager : MonoBehaviour
         return (numCorrectlyIdentified / numHazards) * 100;
     }
 
+    public float GetAverageResponseTime()
+    {
+        float totalResponseTime = 0;
+        float numCorrectlyIdentified = 0;
+        foreach (HazardDto hz in _hazards)
+        {
+            if (hz.ReactionTime != -1)
+            {
+                totalResponseTime += hz.ReactionTime;
+                numCorrectlyIdentified++;
+            }
+        }
+
+        return (numCorrectlyIdentified == 0) ? -1 : (totalResponseTime / numCorrectlyIdentified);
+    }
+
     // Retrieves hazards and empties the queue
     public HazardDto[] GetHazards()
     {
@@ -143,5 +160,7 @@ public class HazardManager : MonoBehaviour
 
         return hazardList;
     }
+
+
 }
 

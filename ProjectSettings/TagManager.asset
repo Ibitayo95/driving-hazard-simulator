@@ -16,6 +16,7 @@ TagManager:
   - Description
   - ResponseTime
   - Spotlight
+  - HazardSummary
   layers:
   - Default
   - TransparentFX

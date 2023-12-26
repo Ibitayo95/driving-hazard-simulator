@@ -24,6 +24,11 @@ public class HazardSummary : MonoBehaviour
     private void UpdateHazardSummaries()
     {
         GameObject[] hazardSummaries = FindObsWithTag("HazardSummary"); // should return a list of 5 objects in order
+
+        if (_hazards.Length > descriptions.Length) // edge case where we have more than 5 hazards
+        {
+            Array.Resize(ref _hazards, descriptions.Length);
+        }
         
         for (int i = 0; i < _hazards.Length; i++)
         {
@@ -37,7 +42,7 @@ public class HazardSummary : MonoBehaviour
             if (hazardResponseTime != -1)
             {
                 light.color = Color.green;
-                hazardResponseTimeText = $"Response time: {hazardResponseTime}";
+                hazardResponseTimeText = $"Response time: {hazardResponseTime} seconds";
             }
             else
             {

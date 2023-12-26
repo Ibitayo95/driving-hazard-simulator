@@ -42,7 +42,7 @@ public class HazardSummary : MonoBehaviour
             if (hazardResponseTime != -1)
             {
                 light.color = Color.green;
-                hazardResponseTimeText = $"Response time: {hazardResponseTime} seconds";
+                hazardResponseTimeText = $"Response time: {hazardResponseTime:F2} seconds";
             }
             else
             {

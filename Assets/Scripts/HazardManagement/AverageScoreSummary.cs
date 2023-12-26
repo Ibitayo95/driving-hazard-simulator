@@ -20,16 +20,16 @@ public class AverageScoreSummary : MonoBehaviour
     private void UpdateScoreSummary()
     {
         float accuracyScore = hazardManager.GetAccuracyScore();
-        percentageSummary.SetText($"Percentage hazards spotted: {accuracyScore}%");
+        percentageSummary.SetText($"Percentage hazards spotted: {accuracyScore:F1}%");
 
         float responseAverage = hazardManager.GetAverageResponseTime();
         if (responseAverage != -1)
         {
-            averageResponseSummary.SetText($"Average response time: {responseAverage}");
+            averageResponseSummary.SetText($"Average response time: {responseAverage:F2}");
         }
         else
         {
-            averageResponseSummary.SetText(string.Empty);
+            averageResponseSummary.SetText("No average response time available");
         }
         
     }

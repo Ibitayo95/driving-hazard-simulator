@@ -120,6 +120,8 @@ public class HazardManager : MonoBehaviour
     public float GetAccuracyScore()
     {
         float numHazards = _hazards.Count;
+        if (numHazards == 0) return 0;
+
         float numCorrectlyIdentified = 0;
 
         foreach (HazardDto hz in _hazards)

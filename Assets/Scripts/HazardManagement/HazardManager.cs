@@ -37,13 +37,15 @@ public class HazardManager : MonoBehaviour
 
     private void Update()
     {
-        if (NumberOfHazardsOccurred % 5 == 0 && !isSummarySceneLoading)
+        if (NumberOfHazardsOccurred > 0 && 
+            NumberOfHazardsOccurred % 5 == 0 && 
+            !isSummarySceneLoading)
         {
             StartCoroutine(LoadSummaryAfterDelay());
         }
     }
     
-    public HazardManager GetInstance()
+    public static HazardManager GetInstance()
     {
         return Instance;
     }

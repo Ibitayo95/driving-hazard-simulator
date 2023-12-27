@@ -21,7 +21,7 @@ public class HazardActivator : MonoBehaviour
 
     void Start()
     {
-        hazardManager = hazardManager.GetInstance();
+        hazardManager = HazardManager.GetInstance();
         hazardManager.isSummarySceneLoading = false; 
         hazardHuman = LayerMask.NameToLayer("Humans");
         hazardCar = LayerMask.NameToLayer("HazardCar");
@@ -35,13 +35,13 @@ public class HazardActivator : MonoBehaviour
 
         int objectLayer = other.gameObject.layer;
 
-        if (objectLayer == hazardHuman || objectLayer == hazardCar) // make sure we've triggered a hazard
+        if (objectLayer == hazardCar) // just cars for now (objectLayer == hazardHuman ||... later)
         {
             // get hazard object
             IHazardObject hazard = other.GetComponent<IHazardObject>();
             if (hazard == null)
             {
-                Debug.LogError("No hazard component detected on GameObject");
+                Debug.LogError("Hazard component not detected on object");
                 return;
             }
             // ignore if its outside the range of the attached trigger zone (e.g. 4-7 seconds)
@@ -61,6 +61,7 @@ public class HazardActivator : MonoBehaviour
                 Debug.Log($"Hazard Triggered: {hazard.Name}");
             }
         }
+        
 
     }
 }

@@ -80,7 +80,7 @@ public class HazardManager : MonoBehaviour
     
     public IEnumerator Delay()
     {
-        yield return new WaitForSeconds(1); // so when final hazard occurs, the transition isnt sudden   
+        yield return new WaitForSecondsRealtime(1); // so when final hazard occurs, the transition isnt sudden   
     }
 
     public IEnumerator StartReactionTimer(IHazardObject hazard)
@@ -90,7 +90,7 @@ public class HazardManager : MonoBehaviour
         float offset = hazard.HazardOffsetTime;
         if (offset > 0)
         {
-            yield return new WaitForSeconds(offset);
+            yield return new WaitForSecondsRealtime(offset);
         }
         float reactionTime = 0;
         Debug.Log("Timer has Started!");

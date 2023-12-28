@@ -13,8 +13,7 @@ public class HazardManager : MonoBehaviour
 {
     public static HazardManager Instance { get; private set; }
 
-    // This dictionary stores the reaction time for each hazard. 
-    // If a hazard is not present in the dictionary, it means the user did not react to it.
+    // This queue stores the reaction time for each hazard. Gets emptied by GetHazards()
     private readonly Queue<HazardDto> _hazards = new();
     public bool isSummarySceneLoading = false;
     public bool HazardActivated = false;

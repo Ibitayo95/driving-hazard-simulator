@@ -3,14 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using HazardManagement;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.Serialization;
+using UnityEngine.XR;
 using UnityEngine.XR.Interaction.Toolkit;
 
 public class HazardManager : MonoBehaviour
 {
+    public ActionBasedController LeftController;
+    public ActionBasedController RightController;
     public static HazardManager Instance { get; private set; }
 
     // This queue stores the reaction time for each hazard. Gets emptied by GetHazards()
@@ -97,7 +98,7 @@ public class HazardManager : MonoBehaviour
         {
             Debug.Log($"Time Elapsed: {reactionTime}");
             // Test with pressing space first - will change this to VR input later
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetKeyDown(KeyCode.Space) || IsTriggerPressed(LeftController) || IsTriggerPressed((RightController)))
             {
                 // Log the reaction time and end the timer
                 newHazard.ReactionTime = reactionTime;
@@ -162,6 +163,11 @@ public class HazardManager : MonoBehaviour
         }
 
         return hazardList;
+    }
+    
+    private bool IsTriggerPressed(ActionBasedController controller)
+    {
+        return controller.activateAction.action.WasPressedThisFrame();
     }
 
 

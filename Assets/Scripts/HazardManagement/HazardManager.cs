@@ -85,7 +85,7 @@ public class HazardManager : MonoBehaviour
 
     public IEnumerator StartReactionTimer(IHazardObject hazard)
     {
-        HazardDto newHazard = new HazardDto { Description = hazard.Name, ReactionTime = -1 };
+        HazardDto newHazard = new HazardDto { Description = hazard.Name, ReactionTime = -1, Type = hazard.Type };
         // get the hazard's offsetTime first and wait for that number of seconds. Then start the timer 
         float offset = hazard.HazardOffsetTime;
         if (offset > 0)

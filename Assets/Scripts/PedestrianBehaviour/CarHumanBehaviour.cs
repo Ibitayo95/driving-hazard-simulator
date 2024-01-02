@@ -20,6 +20,9 @@ public class CarHumanBehaviour : MonoBehaviour, IHazardObject
     [FormerlySerializedAs("hazardOffsetTime")] [SerializeField] private float _hazardOffsetTime;
     public float HazardOffsetTime => _hazardOffsetTime;
 
+    [SerializeField] private HazardType _hazardType;
+    public HazardType Type => _hazardType;
+
     // set these in the editor
     public Animator carAnimator; // e.g. car door opens
     public Animator humanAnimator; // human gets out

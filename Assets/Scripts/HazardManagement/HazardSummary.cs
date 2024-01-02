@@ -15,7 +15,7 @@ public class HazardSummary : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        hazardManager = hazardManager.GetInstance();
+        hazardManager = HazardManager.GetInstance();
         _hazards = hazardManager.GetHazards();
         UpdateHazardSummaries();
     }

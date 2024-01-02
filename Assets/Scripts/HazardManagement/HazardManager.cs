@@ -3,18 +3,18 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using HazardManagement;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.Serialization;
+using UnityEngine.XR;
 using UnityEngine.XR.Interaction.Toolkit;
 
 public class HazardManager : MonoBehaviour
 {
+    public ActionBasedController LeftController;
+    public ActionBasedController RightController;
     public static HazardManager Instance { get; private set; }
 
-    // This dictionary stores the reaction time for each hazard. 
-    // If a hazard is not present in the dictionary, it means the user did not react to it.
+    // This queue stores the reaction time for each hazard. Gets emptied by GetHazards()
     private readonly Queue<HazardDto> _hazards = new();
     public bool isSummarySceneLoading = false;
     public bool HazardActivated = false;
@@ -37,13 +37,15 @@ public class HazardManager : MonoBehaviour
 
     private void Update()
     {
-        if (NumberOfHazardsOccurred % 5 == 0 && !isSummarySceneLoading)
+        if (NumberOfHazardsOccurred > 0 && 
+            NumberOfHazardsOccurred % 5 == 0 && 
+            !isSummarySceneLoading)
         {
             StartCoroutine(LoadSummaryAfterDelay());
         }
     }
     
-    public HazardManager GetInstance()
+    public static HazardManager GetInstance()
     {
         return Instance;
     }
@@ -78,7 +80,7 @@ public class HazardManager : MonoBehaviour
     
     public IEnumerator Delay()
     {
-        yield return new WaitForSeconds(1); // so when final hazard occurs, the transition isnt sudden   
+        yield return new WaitForSecondsRealtime(1); // so when final hazard occurs, the transition isnt sudden   
     }
 
     public IEnumerator StartReactionTimer(IHazardObject hazard)
@@ -88,7 +90,7 @@ public class HazardManager : MonoBehaviour
         float offset = hazard.HazardOffsetTime;
         if (offset > 0)
         {
-            yield return new WaitForSeconds(offset);
+            yield return new WaitForSecondsRealtime(offset);
         }
         float reactionTime = 0;
         Debug.Log("Timer has Started!");
@@ -96,7 +98,7 @@ public class HazardManager : MonoBehaviour
         {
             Debug.Log($"Time Elapsed: {reactionTime}");
             // Test with pressing space first - will change this to VR input later
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetKeyDown(KeyCode.Space) || IsTriggerPressed(LeftController) || IsTriggerPressed((RightController)))
             {
                 // Log the reaction time and end the timer
                 newHazard.ReactionTime = reactionTime;
@@ -161,6 +163,11 @@ public class HazardManager : MonoBehaviour
         }
 
         return hazardList;
+    }
+    
+    private bool IsTriggerPressed(ActionBasedController controller)
+    {
+        return controller.activateAction.action.WasPressedThisFrame();
     }
 
 

@@ -11,8 +11,7 @@ public class HazardActivator : MonoBehaviour
 {
     private HazardManager hazardManager;
     private static readonly System.Random oddsGenerator = new();
-
-    private int hazardHuman;
+    
     private int hazardCar;
     // set in the editor
     public float minHazardOffsetTime = 0f;
@@ -21,9 +20,8 @@ public class HazardActivator : MonoBehaviour
 
     void Start()
     {
-        hazardManager = hazardManager.GetInstance();
+        hazardManager = HazardManager.GetInstance();
         hazardManager.isSummarySceneLoading = false; 
-        hazardHuman = LayerMask.NameToLayer("Humans");
         hazardCar = LayerMask.NameToLayer("HazardCar");
     }
 
@@ -32,16 +30,16 @@ public class HazardActivator : MonoBehaviour
     {
         // ignore if hazard is already occuring (only one can happen at a time)
         if (hazardManager.HazardActivated) return;
-
         int objectLayer = other.gameObject.layer;
+        
 
-        if (objectLayer == hazardHuman || objectLayer == hazardCar) // make sure we've triggered a hazard
+        if (objectLayer == hazardCar || other.gameObject.tag.Equals("HazardHuman"))
         {
             // get hazard object
             IHazardObject hazard = other.GetComponent<IHazardObject>();
             if (hazard == null)
             {
-                Debug.LogError("No hazard component detected on GameObject");
+                Debug.LogError("Hazard component not detected on object", other);
                 return;
             }
             // ignore if its outside the range of the attached trigger zone (e.g. 4-7 seconds)
@@ -61,6 +59,7 @@ public class HazardActivator : MonoBehaviour
                 Debug.Log($"Hazard Triggered: {hazard.Name}");
             }
         }
+        
 
     }
 }

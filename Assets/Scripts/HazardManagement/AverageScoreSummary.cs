@@ -12,7 +12,7 @@ public class AverageScoreSummary : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        hazardManager = hazardManager.GetInstance();
+        hazardManager = HazardManager.GetInstance();
         UpdateScoreSummary();
         
     }

@@ -4,5 +4,4 @@ public enum HazardType
     Man,
     Woman,
     Child,
-    Cyclist,
 }

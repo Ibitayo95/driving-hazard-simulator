@@ -11,13 +11,19 @@ public class HazardSummary : MonoBehaviour
     private HazardDto[] _hazards;
     public TMP_Text[] descriptions;
     public TMP_Text[] responseTimes;
-    // TODO: Create a dictionary that maps hazard types to gameobject prefabs
-    // TODO: Create an array of hazard types and an array of gameobject prefabs (set up in the editor)
-
+    public Dictionary<HazardType, GameObject> hazardMappings = new();
+    // To set up in the editor
+    public HazardType[] hazardTypes;
+    public GameObject[] hazardObjects; // the order of this array must match up with the types
   
     void Start()
     {
-        // TODO: Fill the dictionary by adding the contents of the two arrays
+        // Fill the dictionary using the smallest length of both arrays (they should be the same though)
+        int len = hazardTypes.Length <= hazardObjects.Length ? hazardTypes.Length : hazardObjects.Length;
+        for (int i = 0; i < len; i++)
+        {
+            hazardMappings[hazardTypes[i]] = hazardObjects[i];
+        }
         hazardManager = HazardManager.GetInstance();
         _hazards = hazardManager.GetHazards();
         UpdateHazardSummaries();
@@ -59,7 +65,10 @@ public class HazardSummary : MonoBehaviour
             descriptions[i].SetText(hazardDescription);
             // set response time text
             responseTimes[i].SetText(hazardResponseTimeText);
-            // TODO: set the hazard prefab by putting the type into the dictionary 
+            // TODO: instantiate the hazard prefab by retrieving it from dictionary
+            GameObject prefab = Instantiate(hazardMappings[type], currentHazard.transform.position, Quaternion.identity); 
+            // TODO: then re-size/rotate appropriately
+            prefab.transform.localScale += new Vector3(-0.5f, -0.5f, -0.5f);
             
         }
     }

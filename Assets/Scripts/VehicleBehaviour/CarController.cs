@@ -23,15 +23,17 @@ public class CarController : MonoBehaviour
     public PlayerCarAI carAI;
 
     // Car specs
-    public float maxMotorTorque = 500f; // Maximum torque the motor can apply
+    public float maxMotorTorque; // Maximum torque the motor can apply
     public float maxSteeringAngle = 30f; // Maximum steer angle the wheels can have
     public float drivingBrakeTorque = 300f; // The torque needed to gently brake to control car
     public float handBrakeTorque = 1000f; // brings car to a full stop
     public Vector3 centreOfMass;
+    public float currentMotorTorque;
 
     // Car route information
     private PlayerRouteWaypoint[] playerRoute;
     private int currentWaypointIndex = 0;
+    private bool isDriving = false;
     
 
 
@@ -63,6 +65,7 @@ public class CarController : MonoBehaviour
         CheckWaypointDistance();
         CarControl();
         UpdateWheels(wheelColliders, transforms);
+        AdjustMotorTorqueForIncline();
     }
 
     private void ApplySteer()
@@ -75,10 +78,14 @@ public class CarController : MonoBehaviour
 
     private void Drive()
     {
-        frontLeft.motorTorque = maxMotorTorque;
-        frontRight.motorTorque = maxMotorTorque;
-        backLeft.motorTorque = maxMotorTorque;
-        backRight.motorTorque = maxMotorTorque;
+        if (!isDriving)
+        {
+            frontLeft.motorTorque = maxMotorTorque;
+            frontRight.motorTorque = maxMotorTorque;
+            backLeft.motorTorque = maxMotorTorque;
+            backRight.motorTorque = maxMotorTorque;
+            isDriving = true;
+        } 
     }
 
     // Distance to next waypoint on route
@@ -110,13 +117,10 @@ public class CarController : MonoBehaviour
     public void ApplyDrivingBrake()
     {
         // 70 % distribution of braking on the front tyres, 30 % on rear
-
             backLeft.brakeTorque = drivingBrakeTorque * 0.5f;
             backRight.brakeTorque = drivingBrakeTorque * 0.5f;
             frontLeft.brakeTorque = drivingBrakeTorque * 1.5f;
             frontRight.brakeTorque = drivingBrakeTorque * 1.5f;
-        
-        
     }
 
     public void ApplyHandBrake()
@@ -136,6 +140,16 @@ public class CarController : MonoBehaviour
         frontRight.brakeTorque = 0;
     }
 
+    private void SetMotorTorque(float torque)
+    {
+        frontLeft.motorTorque = torque;
+        frontRight.motorTorque = torque;
+        backLeft.motorTorque = torque;
+        backRight.motorTorque = torque;
+    }
+
+
+
     // Updates the visual appearance of wheels rotating
     void UpdateWheels(WheelCollider[] wheels, Transform[] trans)
     {
@@ -151,6 +165,23 @@ public class CarController : MonoBehaviour
             trans[i].SetPositionAndRotation(position, rotation);
         }
         
+    }
+
+    // to help car have enough power to go up hills
+    private void AdjustMotorTorqueForIncline()
+    {
+        float incline = Vector3.Dot(transform.forward, Vector3.up);
+
+        if (incline > 0) // Uphill
+        {
+            currentMotorTorque = maxMotorTorque + 200f;
+        }
+        else // Level or downhill
+        {
+            currentMotorTorque = maxMotorTorque;
+        }
+
+        SetMotorTorque(currentMotorTorque);
     }
 
 

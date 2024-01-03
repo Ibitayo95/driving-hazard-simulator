@@ -13,6 +13,7 @@ public class HazardManager : MonoBehaviour
     public ActionBasedController LeftController;
     public ActionBasedController RightController;
     public static HazardManager Instance { get; private set; }
+    public AudioSource reactionSound;
 
     // This queue stores the reaction time for each hazard. Gets emptied by GetHazards()
     private readonly Queue<HazardDto> _hazards = new();
@@ -104,6 +105,7 @@ public class HazardManager : MonoBehaviour
                 newHazard.ReactionTime = reactionTime;
                 _hazards.Enqueue(newHazard);
                 Debug.Log($"Hazard SPOTTED! REACTION TIME = {reactionTime} Name = {hazard.Name}");
+                reactionSound.Play();
 
                 ResolveHazard(hazard);
                 yield break;

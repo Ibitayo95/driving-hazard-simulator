@@ -105,8 +105,8 @@ public class HazardManager : MonoBehaviour
                 newHazard.ReactionTime = reactionTime;
                 _hazards.Enqueue(newHazard);
                 Debug.Log($"Hazard SPOTTED! REACTION TIME = {reactionTime} Name = {hazard.Name}");
-                reactionSound.Play();
-
+                if (reactionSound != null) reactionSound.Play();
+                
                 ResolveHazard(hazard);
                 yield break;
             }

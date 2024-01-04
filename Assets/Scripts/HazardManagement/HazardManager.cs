@@ -121,39 +121,6 @@ public class HazardManager : MonoBehaviour
     }
 
 
-    public float GetAccuracyScore()
-    {
-        float numHazards = _hazards.Count;
-        if (numHazards == 0) return 0;
-
-        float numCorrectlyIdentified = 0;
-
-        foreach (HazardDto hz in _hazards)
-        {
-            if (hz.ReactionTime != -1)
-            {
-                numCorrectlyIdentified++;
-            }
-        }
-
-        return (numCorrectlyIdentified / numHazards) * 100;
-    }
-
-    public float GetAverageResponseTime()
-    {
-        float totalResponseTime = 0;
-        float numCorrectlyIdentified = 0;
-        foreach (HazardDto hz in _hazards)
-        {
-            if (hz.ReactionTime != -1)
-            {
-                totalResponseTime += hz.ReactionTime;
-                numCorrectlyIdentified++;
-            }
-        }
-
-        return (numCorrectlyIdentified == 0) ? -1 : (totalResponseTime / numCorrectlyIdentified);
-    }
 
     // Retrieves hazards and empties the queue
     public HazardDto[] GetHazards()

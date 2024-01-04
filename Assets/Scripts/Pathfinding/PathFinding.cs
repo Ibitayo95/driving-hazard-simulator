@@ -213,6 +213,7 @@ namespace PolyPerfect.City
             
             foreach (Tile tile in Tile.tiles)
             {
+                if (tile == null) continue;
                 float distance = Vector3.Distance(tile.transform.position, point);
                 if (distance < minDistance)
                 {

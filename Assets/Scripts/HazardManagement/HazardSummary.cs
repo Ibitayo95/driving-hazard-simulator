@@ -23,6 +23,7 @@ public class HazardSummary : MonoBehaviour
     }
 
 
+
     private void UpdateHazardSummaries()
     {
         GameObject[] hazardSummaries = FindObsWithTag("HazardSummary"); // should return a list of 5 objects in order

@@ -117,6 +117,7 @@ public class HazardManager : MonoBehaviour
 
         // If the timer reaches 5 seconds without the user reacting, then HRT stays as default -1
         Debug.LogWarning($"Hazard not reacted to: {hazard.Name}");
+        _hazards.Enqueue(newHazard);
         ResolveHazard(hazard);
     }
 

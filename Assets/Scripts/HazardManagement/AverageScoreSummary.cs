@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using HazardManagement;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 
@@ -28,7 +30,7 @@ public class AverageScoreSummary : MonoBehaviour
 
     private float GetAccuracyScore(HazardDto[] hazards)
     {
-        float numHazards = _hazards.Count;
+        int numHazards = hazards.Length;
         if (numHazards == 0) return 0;
 
         float numCorrectlyIdentified = 0;

@@ -10,8 +10,8 @@ using UnityEngine.XR.Interaction.Toolkit;
 
 public class HazardManager : MonoBehaviour
 {
-    public ActionBasedController LeftController;
-    public ActionBasedController RightController;
+    //public ActionBasedController LeftController;
+    //public ActionBasedController RightController;
     public static HazardManager Instance { get; private set; }
     public AudioSource reactionSound;
 
@@ -99,7 +99,7 @@ public class HazardManager : MonoBehaviour
         {
             Debug.Log($"Time Elapsed: {reactionTime}");
             // Test with pressing space first - will change this to VR input later
-            if (Input.GetKeyDown(KeyCode.Space) || IsTriggerPressed(LeftController) || IsTriggerPressed((RightController)))
+            if (Input.GetKeyDown(KeyCode.Space))
             {
                 // Log the reaction time and end the timer
                 newHazard.ReactionTime = reactionTime;

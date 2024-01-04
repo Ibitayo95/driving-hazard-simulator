@@ -60,7 +60,7 @@ namespace PolyPerfect
             public List<Tile> NeighborTiles = new List<Tile>(4);
             private void Awake()
             {
-                SceneManager.sceneLoaded += OnSceneLoaded;
+           
                 //Sets up unique id
                 Id = Guid.NewGuid();
                 //Gets all paths from childrens of this gameobject
@@ -92,15 +92,8 @@ namespace PolyPerfect
                 tiles.Add(this);
             }
 
-            private void OnSceneLoaded(Scene arg0, LoadSceneMode arg1)
-            {
-                tiles.Clear();
-            }
-
-            private void OnDestroy()
-            {
-                SceneManager.sceneLoaded -= OnSceneLoaded;
-            }
+     
+ 
 
             private void Start()
             {

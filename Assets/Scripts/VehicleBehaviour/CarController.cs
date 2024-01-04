@@ -48,9 +48,12 @@ public class CarController : MonoBehaviour
         if (SimulationConfig.CarPositionRandomised)
         {
             // set waypoint to random viable position
-            currentWaypointIndex = SimulationConfig.random.Next(0, playerRoute.Length);
+            currentWaypointIndex = SimulationConfig.random.Next(0, playerRoute.Length - 1);
             // set position
             transform.position = playerRoute[currentWaypointIndex].transform.position;
+            // set rotation of car towards the next waypoint
+            transform.LookAt(playerRoute[currentWaypointIndex + 1].transform);
+
         }
     }
 

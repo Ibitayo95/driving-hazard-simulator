@@ -17,6 +17,8 @@ TagManager:
   - ResponseTime
   - Spotlight
   - HazardSummary
+  - LeftController
+  - RightController
   layers:
   - Default
   - TransparentFX

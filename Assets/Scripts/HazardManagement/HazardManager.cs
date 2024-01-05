@@ -13,6 +13,7 @@ public class HazardManager : MonoBehaviour
     public ActionBasedController LeftController;
     public ActionBasedController RightController;
     public static HazardManager Instance { get; private set; }
+    public AudioSource reactionSound;
 
     // This queue stores the reaction time for each hazard. Gets emptied by GetHazards()
     private readonly Queue<HazardDto> _hazards = new();
@@ -37,6 +38,7 @@ public class HazardManager : MonoBehaviour
 
     private void Update()
     {
+        ControllerValidation();
         if (NumberOfHazardsOccurred > 0 && 
             NumberOfHazardsOccurred % 5 == 0 && 
             !isSummarySceneLoading)
@@ -97,14 +99,17 @@ public class HazardManager : MonoBehaviour
         while (reactionTime < 5)
         {
             Debug.Log($"Time Elapsed: {reactionTime}");
-            // Test with pressing space first - will change this to VR input later
-            if (Input.GetKeyDown(KeyCode.Space) || IsTriggerPressed(LeftController) || IsTriggerPressed((RightController)))
+            
+            ControllerValidation();
+            // space, left trigger or right trigger
+            if (Input.GetKeyDown(KeyCode.Space) || IsTriggerPressed(LeftController) || IsTriggerPressed(RightController))
             {
                 // Log the reaction time and end the timer
                 newHazard.ReactionTime = reactionTime;
                 _hazards.Enqueue(newHazard);
                 Debug.Log($"Hazard SPOTTED! REACTION TIME = {reactionTime} Name = {hazard.Name}");
-
+                if (reactionSound != null) reactionSound.Play();
+                
                 ResolveHazard(hazard);
                 yield break;
             }
@@ -115,43 +120,11 @@ public class HazardManager : MonoBehaviour
 
         // If the timer reaches 5 seconds without the user reacting, then HRT stays as default -1
         Debug.LogWarning($"Hazard not reacted to: {hazard.Name}");
+        _hazards.Enqueue(newHazard);
         ResolveHazard(hazard);
     }
 
 
-    public float GetAccuracyScore()
-    {
-        float numHazards = _hazards.Count;
-        if (numHazards == 0) return 0;
-
-        float numCorrectlyIdentified = 0;
-
-        foreach (HazardDto hz in _hazards)
-        {
-            if (hz.ReactionTime != -1)
-            {
-                numCorrectlyIdentified++;
-            }
-        }
-
-        return (numCorrectlyIdentified / numHazards) * 100;
-    }
-
-    public float GetAverageResponseTime()
-    {
-        float totalResponseTime = 0;
-        float numCorrectlyIdentified = 0;
-        foreach (HazardDto hz in _hazards)
-        {
-            if (hz.ReactionTime != -1)
-            {
-                totalResponseTime += hz.ReactionTime;
-                numCorrectlyIdentified++;
-            }
-        }
-
-        return (numCorrectlyIdentified == 0) ? -1 : (totalResponseTime / numCorrectlyIdentified);
-    }
 
     // Retrieves hazards and empties the queue
     public HazardDto[] GetHazards()
@@ -163,6 +136,18 @@ public class HazardManager : MonoBehaviour
         }
 
         return hazardList;
+    }
+
+    private void ControllerValidation()
+    {
+        if (LeftController == null)
+        {
+           LeftController = GameObject.FindWithTag("LeftController")?.GetComponent<ActionBasedController>();
+        }
+        if (RightController == null)
+        {
+            RightController = GameObject.FindWithTag("RightController")?.GetComponent<ActionBasedController>();
+        }
     }
     
     private bool IsTriggerPressed(ActionBasedController controller)

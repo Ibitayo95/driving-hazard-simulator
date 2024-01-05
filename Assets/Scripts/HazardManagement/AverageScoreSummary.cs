@@ -1,28 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
+using HazardManagement;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 
 public class AverageScoreSummary : MonoBehaviour
 {
-    private HazardManager hazardManager;
     public TMP_Text percentageSummary;
     public TMP_Text averageResponseSummary;
 
-    // Start is called before the first frame update
-    void Start()
+ 
+    public void UpdateScoreSummary(HazardDto[] hazards)
     {
-        hazardManager = HazardManager.GetInstance();
-        UpdateScoreSummary();
-        
-    }
-
-    private void UpdateScoreSummary()
-    {
-        float accuracyScore = hazardManager.GetAccuracyScore();
+        float accuracyScore = GetAccuracyScore(hazards);
         percentageSummary.SetText($"Percentage hazards spotted: {accuracyScore:F1}%");
 
-        float responseAverage = hazardManager.GetAverageResponseTime();
+        float responseAverage = GetAverageResponseTime(hazards);
         if (responseAverage != -1)
         {
             averageResponseSummary.SetText($"Average response time: {responseAverage:F2}");
@@ -32,6 +26,40 @@ public class AverageScoreSummary : MonoBehaviour
             averageResponseSummary.SetText("No average response time available");
         }
         
+    }
+
+    private float GetAccuracyScore(HazardDto[] hazards)
+    {
+        int numHazards = hazards.Length;
+        if (numHazards == 0) return 0;
+
+        float numCorrectlyIdentified = 0;
+
+        foreach (HazardDto hz in hazards)
+        {
+            if (hz.ReactionTime != -1)
+            {
+                numCorrectlyIdentified++;
+            }
+        }
+
+        return (numCorrectlyIdentified / numHazards) * 100;
+    }
+
+    private float GetAverageResponseTime(HazardDto[] hazards)
+    {
+        float totalResponseTime = 0;
+        float numCorrectlyIdentified = 0;
+        foreach (HazardDto hz in hazards)
+        {
+            if (hz.ReactionTime != -1)
+            {
+                totalResponseTime += hz.ReactionTime;
+                numCorrectlyIdentified++;
+            }
+        }
+
+        return (numCorrectlyIdentified == 0) ? -1 : (totalResponseTime / numCorrectlyIdentified);
     }
 
 

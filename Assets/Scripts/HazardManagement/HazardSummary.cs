@@ -69,10 +69,11 @@ public class HazardSummary : MonoBehaviour
             descriptions[i].SetText(hazardDescription);
             // set response time text
             responseTimes[i].SetText(hazardResponseTimeText);
-            // TODO: instantiate the hazard prefab by retrieving it from dictionary
+            // instantiate the hazard prefab by retrieving it from dictionary
             GameObject prefab = Instantiate(hazardMappings[type], currentHazard.transform.position, Quaternion.identity); 
-            // TODO: then re-size/rotate appropriately
+            // then re-size/rotate appropriately
             prefab.transform.localScale += new Vector3(-0.5f, -0.5f, -0.5f);
+            prefab.transform.rotation = currentHazard.transform.rotation;
             
         }
     }

@@ -16,6 +16,9 @@ public class HazardHumanBehaviour : MonoBehaviour, IHazardObject
     [FormerlySerializedAs("hazardOffsetTime")][SerializeField] private float _hazardOffsetTime;
     public float HazardOffsetTime => _hazardOffsetTime;
 
+    [SerializeField] private HazardType _hazardType;
+    public HazardType Type => _hazardType;
+
     private Animator animator;
     private bool hazardActivated = false;
     private bool setAnimation = false;

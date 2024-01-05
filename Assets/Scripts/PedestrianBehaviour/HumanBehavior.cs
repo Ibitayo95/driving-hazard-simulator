@@ -147,7 +147,7 @@ namespace PolyPerfect.City
             while (Vector3.Distance(start, destination) < 60 || Vector3.Distance(start, destination) > 300)
             {
                 Tile t = Tile.tiles[UnityEngine.Random.Range(0, Tile.tiles.Count - 1)];
-                if (t.tileType == Tile.TileType.Road || t.tileType == Tile.TileType.OnlyPathwalk)
+                if (t != null && (t.tileType == Tile.TileType.Road || t.tileType == Tile.TileType.OnlyPathwalk))
                 {
                     if (t.verticalType == Tile.VerticalType.Bridge)
                     {

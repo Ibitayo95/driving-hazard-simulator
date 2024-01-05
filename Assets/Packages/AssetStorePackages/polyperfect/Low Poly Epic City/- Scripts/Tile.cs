@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace PolyPerfect
 {
@@ -59,6 +60,7 @@ namespace PolyPerfect
             public List<Tile> NeighborTiles = new List<Tile>(4);
             private void Awake()
             {
+           
                 //Sets up unique id
                 Id = Guid.NewGuid();
                 //Gets all paths from childrens of this gameobject
@@ -89,6 +91,9 @@ namespace PolyPerfect
                 }
                 tiles.Add(this);
             }
+
+     
+ 
 
             private void Start()
             {

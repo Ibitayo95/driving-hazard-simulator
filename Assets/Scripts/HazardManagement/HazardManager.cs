@@ -10,8 +10,8 @@ using UnityEngine.XR.Interaction.Toolkit;
 
 public class HazardManager : MonoBehaviour
 {
-    //public ActionBasedController LeftController;
-    //public ActionBasedController RightController;
+    public ActionBasedController LeftController;
+    public ActionBasedController RightController;
     public static HazardManager Instance { get; private set; }
     public AudioSource reactionSound;
 
@@ -38,6 +38,14 @@ public class HazardManager : MonoBehaviour
 
     private void Update()
     {
+        if (LeftController == null)
+        {
+           LeftController = GameObject.FindWithTag("LeftController").GetComponent<ActionBasedController>();
+        }
+        if (RightController == null)
+        {
+            RightController = GameObject.FindWithTag("RightController").GetComponent<ActionBasedController>();
+        }
         if (NumberOfHazardsOccurred > 0 && 
             NumberOfHazardsOccurred % 5 == 0 && 
             !isSummarySceneLoading)

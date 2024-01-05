@@ -38,14 +38,7 @@ public class HazardManager : MonoBehaviour
 
     private void Update()
     {
-        if (LeftController == null)
-        {
-           LeftController = GameObject.FindWithTag("LeftController").GetComponent<ActionBasedController>();
-        }
-        if (RightController == null)
-        {
-            RightController = GameObject.FindWithTag("RightController").GetComponent<ActionBasedController>();
-        }
+        ControllerValidation();
         if (NumberOfHazardsOccurred > 0 && 
             NumberOfHazardsOccurred % 5 == 0 && 
             !isSummarySceneLoading)
@@ -106,8 +99,10 @@ public class HazardManager : MonoBehaviour
         while (reactionTime < 5)
         {
             Debug.Log($"Time Elapsed: {reactionTime}");
-            // Test with pressing space first - will change this to VR input later
-            if (Input.GetKeyDown(KeyCode.Space))
+            
+            ControllerValidation();
+            // space, left trigger or right trigger
+            if (Input.GetKeyDown(KeyCode.Space) || IsTriggerPressed(LeftController) || IsTriggerPressed(RightController))
             {
                 // Log the reaction time and end the timer
                 newHazard.ReactionTime = reactionTime;
@@ -141,6 +136,18 @@ public class HazardManager : MonoBehaviour
         }
 
         return hazardList;
+    }
+
+    private void ControllerValidation()
+    {
+        if (LeftController == null)
+        {
+           LeftController = GameObject.FindWithTag("LeftController")?.GetComponent<ActionBasedController>();
+        }
+        if (RightController == null)
+        {
+            RightController = GameObject.FindWithTag("RightController")?.GetComponent<ActionBasedController>();
+        }
     }
     
     private bool IsTriggerPressed(ActionBasedController controller)

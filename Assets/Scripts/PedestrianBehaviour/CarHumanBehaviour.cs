@@ -125,12 +125,12 @@ public class CarHumanBehaviour : MonoBehaviour, IHazardObject
         // 1. car door opens
         carAnimator.SetBool("OpenCarDoor", true);
 
-        // 2. wait for 3 secs (car door is open during this time)
-        yield return new WaitForSeconds(2);
+        // 2. wait for x secs (car door is open during this time)
+        yield return new WaitForSecondsRealtime(2);
 
         // 3. person emerges from car
         humanAnimator.SetBool("ExitCar", true);
-        yield return new WaitForSeconds(10);
+        yield return new WaitForSecondsRealtime(10);
         humanHasExitedCar = true;
 
         // 4. person makes way to waypoint

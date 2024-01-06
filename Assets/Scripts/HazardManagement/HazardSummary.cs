@@ -72,7 +72,6 @@ public class HazardSummary : MonoBehaviour
             // instantiate the hazard prefab by retrieving it from dictionary
             GameObject prefab = Instantiate(hazardMappings[type], currentHazard.transform.position, Quaternion.identity); 
             // then re-size/rotate appropriately
-            prefab.transform.localScale += new Vector3(-0.5f, -0.5f, -0.5f);
             prefab.transform.rotation = currentHazard.transform.rotation;
             
         }

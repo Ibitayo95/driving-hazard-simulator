@@ -13,9 +13,19 @@ public class HazardSummary : MonoBehaviour
     public TMP_Text[] descriptions;
     public TMP_Text[] responseTimes;
 
+    public Dictionary<HazardType, GameObject> hazardMappings = new();
+    // To set up in the editor
+    public HazardType[] hazardTypes;
+    public GameObject[] hazardObjects; // the order of this array must match up with the types
 
     void Start()
     {
+        // Fill the dictionary using the smallest length of both arrays (they should be the same though)
+        int len = hazardTypes.Length <= hazardObjects.Length ? hazardTypes.Length : hazardObjects.Length;
+        for (int i = 0; i < len; i++)
+        {
+            hazardMappings[hazardTypes[i]] = hazardObjects[i];
+        }
         hazardManager = HazardManager.GetInstance();
         hazards = hazardManager.GetHazards();
         UpdateHazardSummaries();
@@ -40,6 +50,8 @@ public class HazardSummary : MonoBehaviour
 
             string hazardDescription = hazards[i].Description;
             float hazardResponseTime = hazards[i].ReactionTime;
+            HazardType type = hazards[i].Type;
+
             string hazardResponseTimeText;
 
             if (hazardResponseTime != -1)
@@ -57,6 +69,10 @@ public class HazardSummary : MonoBehaviour
             descriptions[i].SetText(hazardDescription);
             // set response time text
             responseTimes[i].SetText(hazardResponseTimeText);
+            // instantiate the hazard prefab by retrieving it from dictionary
+            GameObject prefab = Instantiate(hazardMappings[type], currentHazard.transform.position, Quaternion.identity); 
+            // then re-size/rotate appropriately
+            prefab.transform.rotation = currentHazard.transform.rotation;
             
         }
     }

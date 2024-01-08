@@ -20,6 +20,9 @@ public class HazardCarController : MonoBehaviour, IHazardObject
     [FormerlySerializedAs("hazardOffsetTime")][SerializeField] private float _hazardOffsetTime;
     public float HazardOffsetTime => _hazardOffsetTime;
 
+    [SerializeField] private HazardType _hazardType;
+    public HazardType Type => _hazardType;
+
     [SerializeField] WheelCollider frontRight;
     [SerializeField] WheelCollider backRight;
     [SerializeField] WheelCollider frontLeft;

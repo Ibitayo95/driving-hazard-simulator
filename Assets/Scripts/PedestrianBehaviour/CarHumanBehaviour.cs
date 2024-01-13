@@ -11,15 +11,12 @@ using UnityEngine.Serialization;
 public class CarHumanBehaviour : MonoBehaviour, IHazardObject
 {
     // Hazard identifiers
-    [FormerlySerializedAs("Name")] [SerializeField] private string _name;
+    [SerializeField] private string _name;
     public string Name => _name;
-
-    [FormerlySerializedAs("ChanceOfOccuring")] [SerializeField] private int _chanceOfOccuring;
+    [SerializeField] private int _chanceOfOccuring;
     public int ChanceOfOccuring => _chanceOfOccuring;
-
-    [FormerlySerializedAs("hazardOffsetTime")] [SerializeField] private float _hazardOffsetTime;
+    [SerializeField] private float _hazardOffsetTime;
     public float HazardOffsetTime => _hazardOffsetTime;
-
     [SerializeField] private HazardType _hazardType;
     public HazardType Type => _hazardType;
 
@@ -45,6 +42,7 @@ public class CarHumanBehaviour : MonoBehaviour, IHazardObject
     void Start()
     {
         humanAnimator.Play("idle_sitting", -1, 0f);
+        _chanceOfOccuring = SimulationConfig.random.Next(0, 50);
     }
 
     void Update()

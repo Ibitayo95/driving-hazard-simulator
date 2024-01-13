@@ -32,18 +32,18 @@ public class HazardActivator : MonoBehaviour
         // ignore if hazard is already occuring (only one can happen at a time)
         if (hazardManager.HazardActivated) return;
         int objectLayer = other.gameObject.layer;
-        
+        bool isMovingSlowOrStopped = GetComponentInParent<Rigidbody>().velocity.magnitude < 1.0;
 
-        if (objectLayer == hazardCar || other.gameObject.tag.Equals("HazardHuman"))
+
+        if ((objectLayer == hazardCar || other.gameObject.tag.Equals("HazardHuman")) && (!isMovingSlowOrStopped))
         {
-            // get hazard object
             IHazardObject hazard = other.GetComponent<IHazardObject>();
             if (hazard == null)
             {
                 Debug.LogError("Hazard component not detected on object", other);
                 return;
             }
-            // ignore if its outside the range of the attached trigger zone (e.g. 4-7 seconds)
+            // ignore if its outside the range of the attached trigger zone
             if (!(hazard.HazardOffsetTime >= minHazardOffsetTime && hazard.HazardOffsetTime < maxHazardOffsetTime))
             {
                 Debug.Log($"Hazard skipped because outside of trigger zone range: {hazard.Name}");
@@ -51,7 +51,7 @@ public class HazardActivator : MonoBehaviour
             }
 
             // use odds to maybe activate hazard
-            int hazardOccurance = hazard.ChanceOfOccuring; // should be between 0 - 100
+            int hazardOccurance = hazard.ChanceOfOccuring;
             int chance = oddsGenerator.Next(0, 100);
 
             if (hazardOccurance > chance)

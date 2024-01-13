@@ -38,13 +38,9 @@ public class MenuTasks : MonoBehaviour
         Application.Quit();
     }
 
-    public void EnableHighFidelityMode()
+    public void ToggleHighFidelityMode()
     {
-        SimulationConfig.IsHighFidelity = true;
+        SimulationConfig.IsHighFidelity = SimulationConfig.IsHighFidelity == false ? SimulationConfig.IsHighFidelity = true : SimulationConfig.IsHighFidelity = false;
     }
 
-    public void DisableHighFidelityMode()
-    {
-        SimulationConfig.IsHighFidelity = false;
-    }
 }

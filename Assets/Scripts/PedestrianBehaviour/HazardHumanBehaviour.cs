@@ -27,11 +27,12 @@ public class HazardHumanBehaviour : MonoBehaviour, IHazardObject
     public bool isRunning = false;
     public float walkingSpeed = 2.0f;
     public float runningSpeed = 4.0f;
+    public AnimationCurve curveWeightedRandom;
 
     void Start()
     {
         animator = GetComponent<Animator>();
-        _chanceOfOccuring = SimulationConfig.random.Next(0, 50);
+        _chanceOfOccuring = (int) (curveWeightedRandom.Evaluate(Random.value) * 50);
     }
 
     void Update()

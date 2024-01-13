@@ -130,7 +130,8 @@ public class HazardManager : MonoBehaviour
     public HazardDto[] GetHazards()
     {
         HazardDto[] hazardList = new HazardDto[_hazards.Count];
-        for (int i = 0; i < _hazards.Count(); i++)
+        int len = _hazards.Count;
+        for (int i = 0; i < len; i++)
         {
             hazardList[i] = _hazards.Dequeue();
         }

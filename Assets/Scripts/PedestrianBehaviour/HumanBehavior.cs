@@ -28,6 +28,7 @@ namespace PolyPerfect.City
         }
         void Start()
         {
+            animator.SetBool("Walking", true);
             maxspeed = Random.Range(1f, 2f);
             start = transform.position;
             if (randomDestination)

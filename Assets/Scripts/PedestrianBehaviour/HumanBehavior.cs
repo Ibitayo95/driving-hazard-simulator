@@ -8,18 +8,18 @@ namespace PolyPerfect.City
     public class HumanBehavior : MonoBehaviour
     {
         [HideInInspector]
-        public List<Path> trajectory = new List<Path>();
+        private List<Path> trajectory = new List<Path>();
         private PathFinding pathFinding;
         private Animator animator;
-        public float maxspeed = 5.0f;
-        public bool randomDestination;
+        private float maxspeed = 5.0f;
+        private bool randomDestination = true;
         private float speed;
         private int activepoint = 0;
         private int activePath = 0;
         private float rotationSpeed = 2.5f;
         bool isMoving = false;
         private Vector3 targetPoint;
-        public Vector3 destination;
+        private Vector3 destination;
         private Vector3 start;
         private void Awake()
         {
@@ -29,7 +29,7 @@ namespace PolyPerfect.City
         void Start()
         {
             
-            maxspeed = Random.Range(1f, 2f);
+            maxspeed = Random.Range(1f, 1.5f);
             start = transform.position;
             if (randomDestination)
             {
@@ -37,27 +37,36 @@ namespace PolyPerfect.City
                 SetRandomDestination();
             }
             trajectory = pathFinding.GetPath(start, destination, PathType.Sidewalk);
-            CheckTrajectory(trajectory);
+            if (trajectory == null) trajectory = CheckTrajectory();
+        
 
+            if (trajectory != null)
+            {
                 isMoving = true;
                 GetClocestPoint();
                 targetPoint = trajectory[0].pathPositions[activepoint].transform.position;
                 start = transform.position;
                 animator.SetBool("Walking", true);
+            }
+            else
+            {
+                Debug.Log("path not found");
+            }
 
         }
 
         // recursive function to ensure a trajectory gets created (because sometimes pathFinding.GetPath() will return a null)
-        private void CheckTrajectory(List<Path> trajectory)
+        private List<Path> CheckTrajectory()
         {
-            if (trajectory != null) return;
-            // set a new destination and try getting new trajectory
             if (randomDestination)
             {
                 SetRandomDestination();
             }
+
             trajectory = pathFinding.GetPath(start, destination, PathType.Sidewalk);
-            CheckTrajectory(trajectory);
+            if (trajectory != null) return trajectory;
+          
+            return CheckTrajectory();
         }
 
         void FixedUpdate()

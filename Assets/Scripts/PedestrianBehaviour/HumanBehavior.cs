@@ -28,7 +28,7 @@ namespace PolyPerfect.City
         }
         void Start()
         {
-            animator.SetBool("Walking", true);
+            
             maxspeed = Random.Range(1f, 2f);
             start = transform.position;
             if (randomDestination)
@@ -36,19 +36,30 @@ namespace PolyPerfect.City
                 //Selects random tile which is at least 60m away and less then 300m
                 SetRandomDestination();
             }
-            trajectory = pathFinding.GetPath(start,destination,PathType.Sidewalk);
-            if (trajectory != null)
-            {
+            trajectory = pathFinding.GetPath(start, destination, PathType.Sidewalk);
+            CheckTrajectory(trajectory);
+
                 isMoving = true;
                 GetClocestPoint();
                 targetPoint = trajectory[0].pathPositions[activepoint].transform.position;
                 start = transform.position;
-            }
-            else
-            {
-                Debug.Log(name + ": Path not found");
-            }
+                animator.SetBool("Walking", true);
+
         }
+
+        // recursive function to ensure a trajectory gets created (because sometimes pathFinding.GetPath() will return a null)
+        private void CheckTrajectory(List<Path> trajectory)
+        {
+            if (trajectory != null) return;
+            // set a new destination and try getting new trajectory
+            if (randomDestination)
+            {
+                SetRandomDestination();
+            }
+            trajectory = pathFinding.GetPath(start, destination, PathType.Sidewalk);
+            CheckTrajectory(trajectory);
+        }
+
         void FixedUpdate()
         {
             if (isMoving)

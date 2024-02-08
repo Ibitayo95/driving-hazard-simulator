@@ -31,7 +31,7 @@ public class HazardHumanBehaviour : MonoBehaviour, IHazardObject
 
     void Start()
     {
-        animator = GetComponent<Animator>();
+        animator = GetComponentInChildren<Animator>();
         _chanceOfOccuring = (int) (curveWeightedRandom.Evaluate(Random.value) * 30);
     }
 

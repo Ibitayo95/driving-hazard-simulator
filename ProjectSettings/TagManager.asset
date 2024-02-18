@@ -19,6 +19,7 @@ TagManager:
   - HazardSummary
   - LeftController
   - RightController
+  - Fog
   layers:
   - Default
   - TransparentFX

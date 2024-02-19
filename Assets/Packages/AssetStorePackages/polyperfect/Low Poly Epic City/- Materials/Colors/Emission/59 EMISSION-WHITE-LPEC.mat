@@ -15,7 +15,7 @@ Material:
   - _EMISSION
   - _SPECULAR_SETUP
   m_InvalidKeywords: []
-  m_LightmapFlags: 1
+  m_LightmapFlags: 2
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
@@ -119,7 +119,7 @@ Material:
     m_Colors:
     - _BaseColor: {r: 0.88235295, g: 0.88235295, b: 0.88235295, a: 1}
     - _Color: {r: 0.88235295, g: 0.88235295, b: 0.88235295, a: 1}
-    - _EmissionColor: {r: 2.6082377, g: 2.6082377, b: 2.6082377, a: 1}
+    - _EmissionColor: {r: 338.42316, g: 313.83365, b: 225.31139, a: 1}
     - _SpecColor: {r: 0, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []
 --- !u!114 &5004568175536514615

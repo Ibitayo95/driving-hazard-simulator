@@ -61,7 +61,7 @@ public class HazardWeatherScript : MonoBehaviour
             currentWeatherProfile = _weatherMap[randomWeather];
         }
 
-        _globalWeather.currentTicks = Random.Range(600, 1700); // set random time of day between 6am and 5pm
+       // _globalWeather.currentTicks = Random.Range(600, 1700); // set random time of day between 6am and 5pm
 
 
 

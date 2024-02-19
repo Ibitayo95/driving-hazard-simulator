@@ -20,6 +20,7 @@ TagManager:
   - LeftController
   - RightController
   - Fog
+  - RoadLamp
   layers:
   - Default
   - TransparentFX

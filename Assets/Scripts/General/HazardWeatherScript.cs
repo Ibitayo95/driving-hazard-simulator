@@ -12,7 +12,8 @@ public class HazardWeatherScript : MonoBehaviour
     private readonly WeatherType[] _weatherTypes = new WeatherType[] { WeatherType.CLEAR, WeatherType.MIXEDCLOUD, 
                                                                        WeatherType.LIGHTRAIN, WeatherType.HEAVYRAIN, 
                                                                        WeatherType.THUNDERSTORM, WeatherType.FOG, WeatherType.SNOW }; // the order of this array matters: see order of WeatherProfiles array
-    private WeightedList<WeatherType> _weatherProbabilityArray;
+    private WeightedList<WeatherType> _weatherProbability;
+    private WeightedList<int> _timeOfDayProbability;
     private readonly Dictionary<WeatherType, WeatherProfile> _weatherMap = new();
     private bool weatherSet = false;
     private bool fogCheck = false;
@@ -30,7 +31,8 @@ public class HazardWeatherScript : MonoBehaviour
             _weatherMap[_weatherTypes[i]] = WeatherProfiles[i]; 
         }
 
-        List<WeightedListItem<WeatherType>> items = new()
+        // set up time and weather weighted lists
+        List<WeightedListItem<WeatherType>> weatherItems = new()
         {
             new WeightedListItem<WeatherType>(WeatherType.CLEAR, 40), // this means clear weather has a 40% chance of occuring (assuming all weights sum to 100)
             new WeightedListItem<WeatherType>(WeatherType.MIXEDCLOUD, 20),
@@ -41,7 +43,18 @@ public class HazardWeatherScript : MonoBehaviour
             new WeightedListItem<WeatherType>(WeatherType.SNOW, 5),
         };
 
-        _weatherProbabilityArray = new(items);
+        List<WeightedListItem<int>> timeItems = new()
+        {
+            new WeightedListItem<int>(900, 25), // this means 9am has a 25% chance of being the starting time (assuming all weights sum to 100)
+            new WeightedListItem<int>(1300, 30),
+            new WeightedListItem<int>(1700, 15),
+            new WeightedListItem<int>(2100, 10),
+            new WeightedListItem<int>(100, 10),
+            new WeightedListItem<int>(500, 10),
+        };
+
+        _weatherProbability = new(weatherItems);
+        _timeOfDayProbability = new(timeItems);
 
         
     }
@@ -51,7 +64,7 @@ public class HazardWeatherScript : MonoBehaviour
         _globalWeather = GetComponent<CozyWeather>();
 
         // set a random weather type
-        WeatherType randomWeather = _weatherProbabilityArray.Next();
+        WeatherType randomWeather = _weatherProbability.Next();
         
         foreach (CozyEcosystem i in _globalWeather.ecosystems)
         {
@@ -61,10 +74,8 @@ public class HazardWeatherScript : MonoBehaviour
             currentWeatherProfile = _weatherMap[randomWeather];
         }
 
-       // _globalWeather.currentTicks = Random.Range(600, 1700); // set random time of day between 6am and 5pm
-
-
-
+        // set a random time of day
+        _globalWeather.currentTicks = _timeOfDayProbability.Next();
     }
 
     void Update()

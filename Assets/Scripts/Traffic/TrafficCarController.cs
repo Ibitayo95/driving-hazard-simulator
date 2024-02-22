@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using PolyPerfect.City;
 using UnityEngine;
 
 public class TrafficCarController : MonoBehaviour
@@ -11,8 +10,6 @@ public class TrafficCarController : MonoBehaviour
     [SerializeField] WheelCollider backLeft;
     private WheelCollider[] wheelColliders;
 
-
-
     [SerializeField] Transform backLeftTransform;
     [SerializeField] Transform frontRightTransform;
     [SerializeField] Transform frontLeftTransform;
@@ -21,12 +18,14 @@ public class TrafficCarController : MonoBehaviour
 
   
     // Car specs
-    public float maxMotorTorque; // Maximum torque the motor can apply
-    public float maxSteeringAngle = 30f; // Maximum steer angle the wheels can have
-    public float drivingBrakeTorque = 300f; // The torque needed to gently brake to control car
-    public float handBrakeTorque = 1000f; // brings car to a full stop
-    public Vector3 centreOfMass;
-    public float currentMotorTorque;
+    public float EngineTorque;
+    private readonly float _minEngineTorque = 400f;
+    private readonly float _maxEngineTorque = 450f;
+    private readonly float _maxSteeringAngle = 45f; // Maximum steer angle the wheels can have
+    private readonly float _drivingBrakeTorque = 300f; // The torque needed to gently brake to control car
+    private readonly float _handBrakeTorque = 1000f; // brings car to a full stop
+    public Vector3 CentreOfMass;
+    private float _currentMotorTorque;
 
     // Car route information
     public Transform[] Waypoints;
@@ -39,18 +38,18 @@ public class TrafficCarController : MonoBehaviour
     private void Start()
     {
         
-        GetComponent<Rigidbody>().centerOfMass = centreOfMass;
+        GetComponent<Rigidbody>().centerOfMass = CentreOfMass;
         wheelColliders = new WheelCollider[] { backRight, backLeft, frontLeft, frontRight };
         transforms = new Transform[] { backRightTransform, backLeftTransform, frontLeftTransform, frontRightTransform };
-      
-            // set waypoint to random viable position
-            currentWaypointIndex = SimulationConfig.random.Next(0, Waypoints.Length - 1);
-            // set position
-            transform.position = Waypoints[currentWaypointIndex].transform.position;
-            // set rotation of car towards the next waypoint
-            transform.LookAt(Waypoints[currentWaypointIndex + 1].transform);
 
-        
+        // set random traffic car position on route
+        currentWaypointIndex = Random.Range(0, Waypoints.Length - 1);
+        transform.position = Waypoints[currentWaypointIndex].transform.position;
+        transform.LookAt(Waypoints[currentWaypointIndex + 1].transform);
+
+        // set random speed for traffic car
+        EngineTorque = Random.Range(_minEngineTorque, _maxEngineTorque);
+
     }
 
 
@@ -70,7 +69,7 @@ public class TrafficCarController : MonoBehaviour
     private void ApplySteer()
     {
         Vector3 relativeVector = transform.InverseTransformPoint(Waypoints[currentWaypointIndex].transform.position);
-        float newSteer = (relativeVector.x / relativeVector.magnitude) * maxSteeringAngle;
+        float newSteer = (relativeVector.x / relativeVector.magnitude) * _maxSteeringAngle;
         frontLeft.steerAngle = newSteer;
         frontRight.steerAngle = newSteer;
     }
@@ -79,10 +78,12 @@ public class TrafficCarController : MonoBehaviour
     {
         if (!isDriving)
         {
-            frontLeft.motorTorque = maxMotorTorque;
-            frontRight.motorTorque = maxMotorTorque;
-            backLeft.motorTorque = maxMotorTorque;
-            backRight.motorTorque = maxMotorTorque;
+            frontLeft.motorTorque = EngineTorque;
+            frontRight.motorTorque = EngineTorque;
+            backLeft.motorTorque = EngineTorque;
+            backRight.motorTorque = EngineTorque;
+
+            _currentMotorTorque = EngineTorque;
             isDriving = true;
         } 
     }
@@ -96,11 +97,10 @@ public class TrafficCarController : MonoBehaviour
         }
     }
 
-    // Keeps car smooth and steady, no accidents. Car stops when required.
+    // Slows the car down when reaching waypoints
     private void CarControl()
     {
-        if (carAI.DetectObstacle(this)) return;
-
+        
         bool isNearWaypoint = Vector3.Distance(transform.position, Waypoints[currentWaypointIndex].transform.position) <= 10f;
         bool isMovingFast = GetComponent<Rigidbody>().velocity.magnitude > 1.5;
 
@@ -116,19 +116,19 @@ public class TrafficCarController : MonoBehaviour
     public void ApplyDrivingBrake()
     {
         // 70 % distribution of braking on the front tyres, 30 % on rear
-            backLeft.brakeTorque = drivingBrakeTorque * 0.5f;
-            backRight.brakeTorque = drivingBrakeTorque * 0.5f;
-            frontLeft.brakeTorque = drivingBrakeTorque * 1.5f;
-            frontRight.brakeTorque = drivingBrakeTorque * 1.5f;
+            backLeft.brakeTorque = _drivingBrakeTorque * 0.5f;
+            backRight.brakeTorque = _drivingBrakeTorque * 0.5f;
+            frontLeft.brakeTorque = _drivingBrakeTorque * 1.5f;
+            frontRight.brakeTorque = _drivingBrakeTorque * 1.5f;
     }
 
     public void ApplyHandBrake()
     {
         // 70 % distribution of braking on the front tyres, 30 % on rear
-        backLeft.brakeTorque =  handBrakeTorque * 0.5f;
-        backRight.brakeTorque = handBrakeTorque * 0.5f;
-        frontLeft.brakeTorque = handBrakeTorque * 1.5f;
-        frontRight.brakeTorque = handBrakeTorque * 1.5f;
+        backLeft.brakeTorque =  _handBrakeTorque * 0.5f;
+        backRight.brakeTorque = _handBrakeTorque * 0.5f;
+        frontLeft.brakeTorque = _handBrakeTorque * 1.5f;
+        frontRight.brakeTorque = _handBrakeTorque * 1.5f;
     }
 
     public void ReleaseBrake()
@@ -173,14 +173,14 @@ public class TrafficCarController : MonoBehaviour
 
         if (incline > 0) // Uphill
         {
-            currentMotorTorque = maxMotorTorque + 200f;
+            _currentMotorTorque = EngineTorque + 200f;
         }
         else // Level or downhill
         {
-            currentMotorTorque = maxMotorTorque;
+            _currentMotorTorque = EngineTorque;
         }
 
-        SetMotorTorque(currentMotorTorque);
+        SetMotorTorque(_currentMotorTorque);
     }
 
 

@@ -43,9 +43,7 @@ public class TrafficCarController : MonoBehaviour
         transforms = new Transform[] { backRightTransform, backLeftTransform, frontLeftTransform, frontRightTransform };
 
         // set random traffic car position on route
-        currentWaypointIndex = Random.Range(0, Waypoints.Length - 1);
-        transform.position = Waypoints[currentWaypointIndex].transform.position;
-        transform.LookAt(Waypoints[currentWaypointIndex + 1].transform);
+        SetRandomPositionOnRoute();
 
         // set random speed for traffic car
         EngineTorque = Random.Range(_minEngineTorque, _maxEngineTorque);
@@ -64,6 +62,26 @@ public class TrafficCarController : MonoBehaviour
         CarControl();
         UpdateWheels(wheelColliders, transforms);
         AdjustMotorTorqueForIncline();
+    }
+
+    private void SetRandomPositionOnRoute()
+    {
+	    bool positionSet = false;
+        
+	    while (!positionSet)
+	    {
+		    currentWaypointIndex = Random.Range(0, Waypoints.Length - 1);
+            Vector3 possiblePosition = Waypoints[currentWaypointIndex].transform.position;
+            Collider[] colliders = Physics.OverlapSphere(possiblePosition, 2f, LayerMask.NameToLayer("Traffic"));
+		    // if there are no traffic vehicles occupying the space then move car there
+		    if (colliders.Length == 0) 
+		    {
+			    transform.position = possiblePosition;
+                transform.LookAt(Waypoints[currentWaypointIndex + 1].transform);
+				positionSet = true;
+		    }
+		    // otherwise we loop again selecting a new random position
+	    }
     }
 
     private void ApplySteer()

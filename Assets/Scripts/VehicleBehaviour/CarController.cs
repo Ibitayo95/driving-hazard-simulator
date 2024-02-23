@@ -19,8 +19,6 @@ public class CarController : MonoBehaviour
     [SerializeField] Transform backRightTransform;
     private Transform[] transforms;
 
-    // Car obstacle detection and intelligence
-    public PlayerCarAI carAI;
 
     // Car specs
     public float maxMotorTorque; // Maximum torque the motor can apply
@@ -36,12 +34,10 @@ public class CarController : MonoBehaviour
     private bool isDriving = false;
     
 
-
     private void Start()
     {
         playerRoute = PlayerRoute.route;
         GetComponent<Rigidbody>().centerOfMass = centreOfMass;
-        carAI = GetComponent<PlayerCarAI>();
         wheelColliders = new WheelCollider[] { backRight, backLeft, frontLeft, frontRight };
         transforms = new Transform[] { backRightTransform, backLeftTransform, frontLeftTransform, frontRightTransform };
 
@@ -100,11 +96,10 @@ public class CarController : MonoBehaviour
         }
     }
 
-    // Keeps car smooth and steady, no accidents. Car stops when required.
+    // Slows car down as it approaches various waypoints
     private void CarControl()
     {
-        if (carAI.DetectObstacle(this)) return;
-
+       
         bool isNearWaypoint = Vector3.Distance(transform.position, playerRoute[currentWaypointIndex].transform.position) <= 10f;
         bool isMovingFast = GetComponent<Rigidbody>().velocity.magnitude > 1.5;
 

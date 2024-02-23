@@ -5,8 +5,8 @@ namespace Traffic
 {
     public class TrafficLightSensor : MonoBehaviour
     {
-        public Material RedLight;
-        public Material GreenLight;
+        public Material redLight;
+        public Material greenLight;
 
         private void OnTriggerEnter(Collider other)
         {

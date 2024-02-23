@@ -6,8 +6,8 @@ namespace Traffic
 {
     public class TrafficCarAI : MonoBehaviour
     {
-        public TrafficCarController TrafficCar;
-        public CarController UserCar;
+        public TrafficCarController trafficCar;
+        public CarController userCar;
 
         private void OnTriggerEnter(Collider other)
         {

@@ -18,20 +18,20 @@ namespace Traffic
 
   
     // Car specs
-    public float EngineTorque;
+    public float engineTorque;
     private readonly float _minEngineTorque = 400f;
     private readonly float _maxEngineTorque = 450f;
     private readonly float _maxSteeringAngle = 45f; // Maximum steer angle the wheels can have
     private readonly float _drivingBrakeTorque = 300f; // The torque needed to gently brake to control car
     private readonly float _handBrakeTorque = 1000f; // brings car to a full stop
-    public Vector3 CentreOfMass;
+    public Vector3 centreOfMass;
     private float _currentMotorTorque;
     private Rigidbody _rb;
 
     // Car route information
-    public Transform[] Waypoints;
-    private int _currentWaypointIndex = 0;
-    private bool _isDriving = false;
+    public Transform[] waypoints;
+    private int _currentWaypointIndex;
+    private bool _isDriving;
    
     
 
@@ -39,22 +39,22 @@ namespace Traffic
     private void Start()
     {
         _rb = GetComponent<Rigidbody>();
-        _rb.centerOfMass = CentreOfMass;
-        _wheelColliders = new WheelCollider[] { backRight, backLeft, frontLeft, frontRight };
-        _transforms = new Transform[] { backRightTransform, backLeftTransform, frontLeftTransform, frontRightTransform };
+        _rb.centerOfMass = centreOfMass;
+        _wheelColliders = new[] { backRight, backLeft, frontLeft, frontRight };
+        _transforms = new[] { backRightTransform, backLeftTransform, frontLeftTransform, frontRightTransform };
 
         // set random traffic car position on route
         SetRandomPositionOnRoute();
 
         // set random speed for traffic car
-        EngineTorque = Random.Range(_minEngineTorque, _maxEngineTorque);
+        engineTorque = Random.Range(_minEngineTorque, _maxEngineTorque);
 
     }
 
 
     void FixedUpdate()
     {
-        if (Waypoints.Length == 0)
+        if (waypoints.Length == 0)
             return;
 
         ApplySteer();
@@ -71,14 +71,14 @@ namespace Traffic
         
 	    while (!positionSet)
 	    {
-		    _currentWaypointIndex = Random.Range(0, Waypoints.Length - 1);
-            Vector3 possiblePosition = Waypoints[_currentWaypointIndex].transform.position;
+		    _currentWaypointIndex = Random.Range(0, waypoints.Length - 1);
+            Vector3 possiblePosition = waypoints[_currentWaypointIndex].transform.position;
             Collider[] colliders = Physics.OverlapSphere(possiblePosition, 2f, LayerMask.NameToLayer("Traffic"));
 		    // if there are no traffic vehicles occupying the space then move car there
 		    if (colliders.Length == 0) 
 		    {
 			    transform.position = possiblePosition;
-                transform.LookAt(Waypoints[_currentWaypointIndex + 1].transform);
+                transform.LookAt(waypoints[_currentWaypointIndex + 1].transform);
 				positionSet = true;
 		    }
 		    // otherwise we loop again selecting a new random position
@@ -87,7 +87,7 @@ namespace Traffic
 
     private void ApplySteer()
     {
-        Vector3 relativeVector = transform.InverseTransformPoint(Waypoints[_currentWaypointIndex].transform.position);
+        Vector3 relativeVector = transform.InverseTransformPoint(waypoints[_currentWaypointIndex].transform.position);
         float newSteer = (relativeVector.x / relativeVector.magnitude) * _maxSteeringAngle;
         frontLeft.steerAngle = newSteer;
         frontRight.steerAngle = newSteer;
@@ -97,12 +97,12 @@ namespace Traffic
     {
         if (!_isDriving)
         {
-            frontLeft.motorTorque = EngineTorque;
-            frontRight.motorTorque = EngineTorque;
-            backLeft.motorTorque = EngineTorque;
-            backRight.motorTorque = EngineTorque;
+            frontLeft.motorTorque = engineTorque;
+            frontRight.motorTorque = engineTorque;
+            backLeft.motorTorque = engineTorque;
+            backRight.motorTorque = engineTorque;
 
-            _currentMotorTorque = EngineTorque;
+            _currentMotorTorque = engineTorque;
             _isDriving = true;
         } 
     }
@@ -110,9 +110,9 @@ namespace Traffic
     // Distance to next waypoint on route
     private void CheckWaypointDistance()
     {
-        if (Vector3.Distance(transform.position, Waypoints[_currentWaypointIndex].transform.position) < 5f)
+        if (Vector3.Distance(transform.position, waypoints[_currentWaypointIndex].transform.position) < 5f)
         {
-            _currentWaypointIndex = (_currentWaypointIndex + 1) % Waypoints.Length;
+            _currentWaypointIndex = (_currentWaypointIndex + 1) % waypoints.Length;
         }
     }
 
@@ -120,7 +120,7 @@ namespace Traffic
     private void CarControl()
     {
         
-        bool isNearWaypoint = Vector3.Distance(transform.position, Waypoints[_currentWaypointIndex].transform.position) <= 10f;
+        bool isNearWaypoint = Vector3.Distance(transform.position, waypoints[_currentWaypointIndex].transform.position) <= 10f;
         bool isMovingFast = _rb.velocity.magnitude > 1.5;
 
         if (isNearWaypoint && isMovingFast)
@@ -190,11 +190,11 @@ namespace Traffic
 
         if (incline > 0) // Uphill
         {
-            _currentMotorTorque = EngineTorque + 200f;
+            _currentMotorTorque = engineTorque + 200f;
         }
         else // Level or downhill
         {
-            _currentMotorTorque = EngineTorque;
+            _currentMotorTorque = engineTorque;
         }
 
         SetMotorTorque(_currentMotorTorque);

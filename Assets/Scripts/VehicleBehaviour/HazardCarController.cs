@@ -190,7 +190,8 @@ namespace VehicleBehaviour
         // if human is hit, ragdoll physics occurs
         void OnCollisionEnter(Collision collision)
         {
-            if (collision.gameObject.layer == LayerMask.NameToLayer("Humans"))
+            if ((collision.gameObject.layer == LayerMask.NameToLayer("Humans")) || 
+                (collision.gameObject.layer == LayerMask.NameToLayer("HumanBystanders")) )
             {
                 // Calculate the direction from the vehicle to the pedestrian
                 Vector3 direction = collision.transform.position - transform.position;

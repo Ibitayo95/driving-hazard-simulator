@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using VehicleBehaviour;
 
@@ -11,12 +10,33 @@ namespace Traffic
 
         private void OnTriggerEnter(Collider other)
         {
-            throw new NotImplementedException();
+            if (userCar != null)
+            {
+                // if a hazard human - then no braking (to simulate accident)
+                if (other.gameObject.layer == LayerMask.NameToLayer("Humans"))
+                {
+                    return;
+                }
+                
+                userCar.ApplyHandBrake();
+            }
+
+            else if (trafficCar != null)
+            {
+                trafficCar.ApplyHandBrake();
+            }
         }
         
         private void OnTriggerExit(Collider other)
         {
-            throw new NotImplementedException();
+            if (userCar != null)
+            {
+                userCar.ReleaseBrake();
+            }
+            else if (trafficCar != null)
+            {
+                trafficCar.ReleaseBrake();
+            }
         }
     }
 }

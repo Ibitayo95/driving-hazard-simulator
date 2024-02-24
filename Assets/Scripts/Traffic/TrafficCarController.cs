@@ -150,7 +150,7 @@ namespace Traffic
         frontRight.brakeTorque = _handBrakeTorque * 1.5f;
     }
 
-    private void ReleaseBrake()
+    public void ReleaseBrake()
     {
         backLeft.brakeTorque = 0;
         backRight.brakeTorque = 0;
@@ -203,7 +203,7 @@ namespace Traffic
 
 
     // if human is hit, ragdoll physics occurs
-    void OnCollisionEnter(Collision collision)
+    private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.layer == LayerMask.NameToLayer("Humans"))
         {
@@ -212,6 +212,24 @@ namespace Traffic
             direction = direction.normalized;
 
             collision.gameObject.GetComponentInParent<RagdollActivator>().HitByVehicle(direction, 5f);
+        }
+    }
+    
+    // to visualise the traffic car's waypoints/route
+    private void OnDrawGizmos()
+    {
+        if (waypoints == null || waypoints.Length == 0) return;
+        foreach (var t in waypoints)
+        {
+            Gizmos.color = Color.white;
+            Gizmos.DrawWireCube(t.position, new Vector3(1, 1, 1));
+        }
+
+        Gizmos.color = Color.cyan;
+        // lines that connect the route of waypoints
+        for (var i = 0; i < waypoints.Length - 1; i++)
+        {
+            Gizmos.DrawLine(waypoints[i].position, waypoints[i + 1].position);
         }
     }
 }

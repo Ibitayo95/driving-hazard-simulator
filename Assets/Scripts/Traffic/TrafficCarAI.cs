@@ -17,16 +17,27 @@ namespace Traffic
                 {
                     return;
                 }
-                
-                userCar.ApplyHandBrake();
+                CarAdvanceTrafficLight(other, cc: userCar);
             }
 
             else if (trafficCar != null)
             {
-                trafficCar.ApplyHandBrake();
+                CarAdvanceTrafficLight(other, tc: trafficCar);
             }
         }
-        
+
+        private void OnTriggerStay(Collider other)
+        {
+            if (userCar != null)
+            {
+                CarAdvanceTrafficLight(other, cc: userCar);
+            }
+            else if (trafficCar != null)
+            {
+                CarAdvanceTrafficLight(other, tc: trafficCar);
+            }
+        }
+
         private void OnTriggerExit(Collider other)
         {
             if (userCar != null)
@@ -36,6 +47,39 @@ namespace Traffic
             else if (trafficCar != null)
             {
                 trafficCar.ReleaseBrake();
+            }
+        }
+        
+        private void CarAdvanceTrafficLight(Collider other, TrafficCarController tc = null, CarController cc = null)
+        {
+            bool user = cc != null;
+            bool traffic = tc != null;
+            
+            if (other.gameObject.layer == LayerMask.NameToLayer("Traffic"))
+            {
+                var trafficLight = other.gameObject.GetComponent<TrafficLight>();
+                if (trafficLight.greenLight)
+                {
+                    if (user)
+                    {
+                        cc.ReleaseBrake();
+                    }
+                    else if (traffic)
+                    {
+                        tc.ReleaseBrake();
+                    }
+                }
+                else
+                {
+                    if (user)
+                    {
+                        cc.ApplyHandBrake();
+                    }
+                    else if (traffic)
+                    {
+                        tc.ApplyHandBrake();
+                    }
+                }
             }
         }
     }

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 9080601882951739283}
   - component: {fileID: 7715640323365870797}
   - component: {fileID: 7494441902085947871}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: WindowF
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -94,7 +94,7 @@ GameObject:
   - component: {fileID: 1969888080384671028}
   - component: {fileID: 721793351084759688}
   - component: {fileID: 3192436975546510115}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: door_fr
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -178,7 +178,7 @@ GameObject:
   - component: {fileID: 9213057827688599893}
   - component: {fileID: 7939420296131820883}
   - component: {fileID: 7805510212995437192}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: WindowL
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -261,7 +261,7 @@ GameObject:
   - component: {fileID: 3893448444182524706}
   - component: {fileID: 4552680818603879302}
   - component: {fileID: 3177161687632457723}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: door_fl
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -345,7 +345,7 @@ GameObject:
   - component: {fileID: 52851423654031607}
   - component: {fileID: 7889158267022822310}
   - component: {fileID: 7817864758592136675}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: WindowB
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -428,7 +428,7 @@ GameObject:
   - component: {fileID: 1732234224919918325}
   - component: {fileID: 5468708216745561058}
   - component: {fileID: 5056670738513585808}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: steering_wheel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -511,7 +511,7 @@ GameObject:
   - component: {fileID: 5378949928216981464}
   - component: {fileID: 746097525937612247}
   - component: {fileID: 6196113050738308149}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: TRAFFIC DETECTOR
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -579,7 +579,7 @@ GameObject:
   - component: {fileID: 7541885396292892096}
   - component: {fileID: 4961459399035009740}
   - component: {fileID: 7950133943508530380}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: WindowR
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -662,7 +662,7 @@ GameObject:
   - component: {fileID: 5762518933989967235}
   - component: {fileID: 6575757711858443509}
   - component: {fileID: 1984954500980761653}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: WindowFL
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -745,7 +745,7 @@ GameObject:
   - component: {fileID: 6665711243697908918}
   - component: {fileID: 4272217572939668864}
   - component: {fileID: 35847801731191431}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: SportCar5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -832,7 +832,7 @@ GameObject:
   - component: {fileID: 1415485366269541780}
   - component: {fileID: 1419571704785214002}
   - component: {fileID: 718740372081940729}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: WindowFR
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -912,6 +912,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1040757067051914829, guid: e83aaf45cf4204889a7c29a5a04eaf77, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 2454872161604271501, guid: e83aaf45cf4204889a7c29a5a04eaf77, type: 3}
       propertyPath: m_LocalPosition.x
       value: -266.62
@@ -952,9 +956,45 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2454872161604428193, guid: e83aaf45cf4204889a7c29a5a04eaf77, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2454872161604428195, guid: e83aaf45cf4204889a7c29a5a04eaf77, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2454872161604428201, guid: e83aaf45cf4204889a7c29a5a04eaf77, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2454872161604428203, guid: e83aaf45cf4204889a7c29a5a04eaf77, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 2454872161604428205, guid: e83aaf45cf4204889a7c29a5a04eaf77, type: 3}
       propertyPath: m_Name
       value: TrafficCar6
+      objectReference: {fileID: 0}
+    - target: {fileID: 2454872161604428205, guid: e83aaf45cf4204889a7c29a5a04eaf77, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 3128121791699833370, guid: e83aaf45cf4204889a7c29a5a04eaf77, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 5230452761658044296, guid: e83aaf45cf4204889a7c29a5a04eaf77, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 6445625715224963204, guid: e83aaf45cf4204889a7c29a5a04eaf77, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 9126444206626288723, guid: e83aaf45cf4204889a7c29a5a04eaf77, type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 3036402710391698998, guid: e83aaf45cf4204889a7c29a5a04eaf77, type: 3}

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 9000143026471936212}
   - component: {fileID: 1568789978366975339}
   - component: {fileID: 2314783896217145447}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: TRAFFIC DETECTOR
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -79,7 +79,7 @@ GameObject:
   - component: {fileID: 4447640105151124221}
   - component: {fileID: 8009108694287947185}
   - component: {fileID: 1640287923354601139}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Sedan4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -163,9 +163,33 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 214883718819514723, guid: bfa1d2b680b054453857ac7175cbbf7b, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 829590945665170128, guid: bfa1d2b680b054453857ac7175cbbf7b, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 829590945665170130, guid: bfa1d2b680b054453857ac7175cbbf7b, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 829590945665170132, guid: bfa1d2b680b054453857ac7175cbbf7b, type: 3}
       propertyPath: m_Name
       value: TrafficCar7
+      objectReference: {fileID: 0}
+    - target: {fileID: 829590945665170132, guid: bfa1d2b680b054453857ac7175cbbf7b, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 829590945665170136, guid: bfa1d2b680b054453857ac7175cbbf7b, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 829590945665170138, guid: bfa1d2b680b054453857ac7175cbbf7b, type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 829590945665591028, guid: bfa1d2b680b054453857ac7175cbbf7b, type: 3}
       propertyPath: m_LocalPosition.x
@@ -206,6 +230,22 @@ PrefabInstance:
     - target: {fileID: 829590945665591028, guid: bfa1d2b680b054453857ac7175cbbf7b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2874346189710855476, guid: bfa1d2b680b054453857ac7175cbbf7b, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 6284101539699912490, guid: bfa1d2b680b054453857ac7175cbbf7b, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 6990840871201240305, guid: bfa1d2b680b054453857ac7175cbbf7b, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 8133870193944736765, guid: bfa1d2b680b054453857ac7175cbbf7b, type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 266065896030858575, guid: bfa1d2b680b054453857ac7175cbbf7b, type: 3}

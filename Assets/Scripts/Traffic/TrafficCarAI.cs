@@ -44,6 +44,7 @@ namespace Traffic
         private void OnTriggerExit(Collider other)
         {
             if (other.gameObject.layer == LayerMask.NameToLayer("Car") ||
+                other.gameObject.layer == LayerMask.NameToLayer("HazardCar") ||
                 other.gameObject.layer == LayerMask.NameToLayer("HumanBystander"))
             {
                 if (userCar != null)

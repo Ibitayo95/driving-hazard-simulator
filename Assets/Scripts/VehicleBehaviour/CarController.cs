@@ -32,7 +32,7 @@ namespace VehicleBehaviour
         private PlayerRouteWaypoint[] _playerRoute;
         private int _currentWaypointIndex;
         private bool _isDriving;
-        private bool _isStopped;
+        private bool _hasBrakedToStop;
     
 
         private void Start()
@@ -100,8 +100,7 @@ namespace VehicleBehaviour
 
         // Slows car down as it approaches various waypoints
         private void CarControl()
-        {
-       
+        {     
             bool isNearWaypoint = Vector3.Distance(transform.position, _playerRoute[_currentWaypointIndex].transform.position) <= 10f;
             bool isMovingFast = _rb.velocity.magnitude > 1.5;
 
@@ -109,12 +108,12 @@ namespace VehicleBehaviour
             {
                 ApplyDrivingBrake();
                 return;
-            }
+            }            
         }
 
         private void ApplyDrivingBrake()
         {
-            if (_isStopped) return;
+            if (_hasBrakedToStop) return;
             // 70 % distribution of braking on the front tyres, 30 % on rear
             backLeft.brakeTorque = drivingBrakeTorque * 0.5f;
             backRight.brakeTorque = drivingBrakeTorque * 0.5f;
@@ -130,7 +129,7 @@ namespace VehicleBehaviour
             frontLeft.brakeTorque = handBrakeTorque * 1.5f;
             frontRight.brakeTorque = handBrakeTorque * 1.5f;
 
-            _isStopped = true;
+            _hasBrakedToStop = true;
         }
 
         public void ReleaseBrake()
@@ -139,7 +138,7 @@ namespace VehicleBehaviour
             backRight.brakeTorque = 0;
             frontLeft.brakeTorque = 0;
             frontRight.brakeTorque = 0;
-            _isStopped = false;
+            _hasBrakedToStop = false;
         }
 
         private void SetMotorTorque(float torque)
@@ -196,6 +195,16 @@ namespace VehicleBehaviour
                 direction = direction.normalized;
 
                 collision.gameObject.GetComponentInParent<RagdollActivator>().HitByVehicle(direction, 5f);
+            }
+        }
+
+        private void OnTriggerExit(Collider other)
+        {
+            if (other.gameObject.layer == LayerMask.NameToLayer("Car") ||
+                other.gameObject.layer == LayerMask.NameToLayer("HazardCar") ||
+                other.gameObject.layer == LayerMask.NameToLayer("HumanBystander"))
+            {
+                ReleaseBrake();
             }
         }
 

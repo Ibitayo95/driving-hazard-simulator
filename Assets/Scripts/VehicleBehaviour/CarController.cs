@@ -32,6 +32,7 @@ namespace VehicleBehaviour
         private PlayerRouteWaypoint[] _playerRoute;
         private int _currentWaypointIndex;
         private bool _isDriving;
+        private bool _isStopped;
     
 
         private void Start()
@@ -113,6 +114,7 @@ namespace VehicleBehaviour
 
         private void ApplyDrivingBrake()
         {
+            if (_isStopped) return;
             // 70 % distribution of braking on the front tyres, 30 % on rear
             backLeft.brakeTorque = drivingBrakeTorque * 0.5f;
             backRight.brakeTorque = drivingBrakeTorque * 0.5f;
@@ -127,6 +129,8 @@ namespace VehicleBehaviour
             backRight.brakeTorque = handBrakeTorque * 0.5f;
             frontLeft.brakeTorque = handBrakeTorque * 1.5f;
             frontRight.brakeTorque = handBrakeTorque * 1.5f;
+
+            _isStopped = true;
         }
 
         public void ReleaseBrake()
@@ -135,6 +139,7 @@ namespace VehicleBehaviour
             backRight.brakeTorque = 0;
             frontLeft.brakeTorque = 0;
             frontRight.brakeTorque = 0;
+            _isStopped = false;
         }
 
         private void SetMotorTorque(float torque)

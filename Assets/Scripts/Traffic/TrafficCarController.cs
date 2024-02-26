@@ -32,6 +32,7 @@ namespace Traffic
     public Transform[] waypoints;
     private int _currentWaypointIndex;
     private bool _isDriving;
+    private bool _isStopped;
    
     
 
@@ -133,11 +134,12 @@ namespace Traffic
 
     private void ApplyDrivingBrake()
     {
+        if (_isStopped) return;
         // 70 % distribution of braking on the front tyres, 30 % on rear
-            backLeft.brakeTorque = _drivingBrakeTorque * 0.5f;
-            backRight.brakeTorque = _drivingBrakeTorque * 0.5f;
-            frontLeft.brakeTorque = _drivingBrakeTorque * 1.5f;
-            frontRight.brakeTorque = _drivingBrakeTorque * 1.5f;
+        backLeft.brakeTorque = _drivingBrakeTorque * 0.5f;
+        backRight.brakeTorque = _drivingBrakeTorque * 0.5f;
+        frontLeft.brakeTorque = _drivingBrakeTorque * 1.5f;
+        frontRight.brakeTorque = _drivingBrakeTorque * 1.5f;
     }
 
     public void ApplyHandBrake()
@@ -147,6 +149,7 @@ namespace Traffic
         backRight.brakeTorque = _handBrakeTorque * 0.5f;
         frontLeft.brakeTorque = _handBrakeTorque * 1.5f;
         frontRight.brakeTorque = _handBrakeTorque * 1.5f;
+        _isStopped = true;
     }
 
     public void ReleaseBrake()
@@ -155,6 +158,7 @@ namespace Traffic
         backRight.brakeTorque = 0;
         frontLeft.brakeTorque = 0;
         frontRight.brakeTorque = 0;
+        _isStopped = false;
     }
 
     private void SetMotorTorque(float torque)

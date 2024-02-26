@@ -129,7 +129,6 @@ namespace Traffic
             return;
         }
 
-        ReleaseBrake();
     }
 
     private void ApplyDrivingBrake()

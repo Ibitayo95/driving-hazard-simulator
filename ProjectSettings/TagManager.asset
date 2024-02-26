@@ -32,10 +32,10 @@ TagManager:
   - Traffic
   - Buildings
   - Obstacles
-  - Player
+  - Car
   - HazardCar
   - Humans
-  - 
+  - HumanBystanders
   - 
   - 
   - 

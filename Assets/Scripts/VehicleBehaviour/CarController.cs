@@ -109,8 +109,6 @@ namespace VehicleBehaviour
                 ApplyDrivingBrake();
                 return;
             }
-
-            ReleaseBrake();
         }
 
         private void ApplyDrivingBrake()

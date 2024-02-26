@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using VehicleBehaviour;
 
@@ -18,11 +19,13 @@ namespace Traffic
                     return;
                 }
                 CarAdvanceTrafficLight(other, cc: userCar);
+                CarDetectObstacle(other, cc: userCar);
             }
 
             else if (trafficCar != null)
             {
                 CarAdvanceTrafficLight(other, tc: trafficCar);
+                CarDetectObstacle(other, tc: trafficCar);
             }
         }
 
@@ -79,6 +82,25 @@ namespace Traffic
                     {
                         tc.ApplyHandBrake();
                     }
+                }
+            }
+        }
+
+        private void CarDetectObstacle(Collider other, TrafficCarController tc = null, CarController cc = null)
+        {
+            bool user = cc != null;
+            bool traffic = tc != null;
+
+            if (other.gameObject.layer == LayerMask.NameToLayer("Car") ||
+                other.gameObject.layer == LayerMask.NameToLayer("HumanBystander"))
+            {
+                if (user)
+                {
+                    cc.ApplyHandBrake();
+                }
+                else if (traffic)
+                {
+                    tc.ApplyHandBrake();
                 }
             }
         }

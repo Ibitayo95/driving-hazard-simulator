@@ -20,6 +20,7 @@ TagManager:
   - LeftController
   - RightController
   - Fog
+  - RoadLamp
   layers:
   - Default
   - TransparentFX
@@ -31,10 +32,10 @@ TagManager:
   - Traffic
   - Buildings
   - Obstacles
-  - Player
+  - Car
   - HazardCar
   - Humans
-  - 
+  - HumanBystanders
   - 
   - 
   - 

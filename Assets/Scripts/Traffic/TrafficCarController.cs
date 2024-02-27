@@ -19,8 +19,8 @@ namespace Traffic
   
     // Car specs
     public float engineTorque;
-    private readonly float _minEngineTorque = 400f;
-    private readonly float _maxEngineTorque = 450f;
+    private readonly float _minEngineTorque = 250f;
+    private readonly float _maxEngineTorque = 300f;
     private readonly float _maxSteeringAngle = 45f; // Maximum steer angle the wheels can have
     private readonly float _drivingBrakeTorque = 300f; // The torque needed to gently brake to control car
     private readonly float _handBrakeTorque = 1000f; // brings car to a full stop
@@ -61,7 +61,6 @@ namespace Traffic
         ApplySteer();
         Drive();
         CheckWaypointDistance();
-        CarControl();
         UpdateWheels(_wheelColliders, _transforms);
         AdjustMotorTorqueForIncline();
     }
@@ -117,20 +116,6 @@ namespace Traffic
         }
     }
 
-    // Slows the car down when reaching waypoints
-    private void CarControl()
-    {
-        
-        bool isNearWaypoint = Vector3.Distance(transform.position, waypoints[_currentWaypointIndex].transform.position) <= 10f;
-        bool isMovingFast = _rb.velocity.magnitude > 1.5;
-
-        if (isNearWaypoint && isMovingFast)
-        {
-            ApplyDrivingBrake();
-            return;
-        }
-
-    }
 
     private void ApplyDrivingBrake()
     {

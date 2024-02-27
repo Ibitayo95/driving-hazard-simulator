@@ -20,12 +20,12 @@ namespace VehicleBehaviour
 
 
         // Car specs
-        public float maxMotorTorque; // Maximum torque the motor can apply
-        public float maxSteeringAngle = 30f; // Maximum steer angle the wheels can have
-        public float drivingBrakeTorque = 300f; // The torque needed to gently brake to control car
-        public float handBrakeTorque = 1000f; // brings car to a full stop
+        private float maxMotorTorque = 250f; // Maximum torque the motor can apply
+        private float maxSteeringAngle = 30f; // Maximum steer angle the wheels can have
+        private float drivingBrakeTorque = 300f; // The torque needed to gently brake to control car
+        private float handBrakeTorque = 1000f; // brings car to a full stop
         public Vector3 centreOfMass;
-        public float currentMotorTorque;
+        private float currentMotorTorque;
         private Rigidbody _rb;
 
         // Car route information
@@ -64,7 +64,6 @@ namespace VehicleBehaviour
             ApplySteer();
             Drive();
             CheckWaypointDistance();
-            CarControl();
             UpdateWheels(_wheelColliders, _transforms);
             AdjustMotorTorqueForIncline();
         }
@@ -98,18 +97,6 @@ namespace VehicleBehaviour
             }
         }
 
-        // Slows car down as it approaches various waypoints
-        private void CarControl()
-        {     
-            bool isNearWaypoint = Vector3.Distance(transform.position, _playerRoute[_currentWaypointIndex].transform.position) <= 10f;
-            bool isMovingFast = _rb.velocity.magnitude > 1.5;
-
-            if (isNearWaypoint && isMovingFast)
-            {
-                ApplyDrivingBrake();
-                return;
-            } 
-        }
 
         private void ApplyDrivingBrake()
         {

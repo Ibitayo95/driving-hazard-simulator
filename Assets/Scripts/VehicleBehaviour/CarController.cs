@@ -20,8 +20,8 @@ namespace VehicleBehaviour
 
 
         // Car specs
-        private float maxMotorTorque = 250f; // Maximum torque the motor can apply
-        private float maxSteeringAngle = 30f; // Maximum steer angle the wheels can have
+        private float maxMotorTorque = 130f; // Maximum torque the motor can apply
+        private float maxSteeringAngle = 45f; // Maximum steer angle the wheels can have
         private float drivingBrakeTorque = 300f; // The torque needed to gently brake to control car
         private float handBrakeTorque = 1000f; // brings car to a full stop
         public Vector3 centreOfMass;

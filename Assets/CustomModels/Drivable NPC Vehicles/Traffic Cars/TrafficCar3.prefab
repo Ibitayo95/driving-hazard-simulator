@@ -1332,7 +1332,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8199082342361265982}
   - component: {fileID: 4980865515240205847}
-  - component: {fileID: 7778832823704078970}
+  - component: {fileID: 411861674136499069}
   m_Layer: 10
   m_Name: TRAFFIC DETECTOR
   m_TagString: Untagged
@@ -1369,7 +1369,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   trafficCar: {fileID: 8676543436961864012}
   userCar: {fileID: 0}
---- !u!65 &7778832823704078970
+--- !u!65 &411861674136499069
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1388,7 +1388,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.95, y: 1.3, z: 2.11}
+  m_Size: {x: 2.95, y: 1.3, z: 1.54}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &6311167029402685145
 GameObject:

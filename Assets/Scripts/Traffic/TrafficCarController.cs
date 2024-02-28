@@ -19,8 +19,8 @@ namespace Traffic
   
     // Car specs
     public float engineTorque;
-    private readonly float _minEngineTorque = 250f;
-    private readonly float _maxEngineTorque = 300f;
+    private readonly float _minEngineTorque = 130f;
+    private readonly float _maxEngineTorque = 180f;
     private readonly float _maxSteeringAngle = 45f; // Maximum steer angle the wheels can have
     private readonly float _drivingBrakeTorque = 300f; // The torque needed to gently brake to control car
     private readonly float _handBrakeTorque = 1000f; // brings car to a full stop

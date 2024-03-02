@@ -19,11 +19,11 @@ namespace Traffic
   
     // Car specs
     public float engineTorque;
-    private readonly float _minEngineTorque = 400f;
-    private readonly float _maxEngineTorque = 450f;
+    private readonly float _minEngineTorque = 130f;
+    private readonly float _maxEngineTorque = 145f;
     private readonly float _maxSteeringAngle = 45f; // Maximum steer angle the wheels can have
     private readonly float _drivingBrakeTorque = 300f; // The torque needed to gently brake to control car
-    private readonly float _handBrakeTorque = 1000f; // brings car to a full stop
+    private readonly float _handBrakeTorque = 30000f; // brings car to a full stop
     public Vector3 centreOfMass;
     private float _currentMotorTorque;
     private Rigidbody _rb;
@@ -32,6 +32,7 @@ namespace Traffic
     public Transform[] waypoints;
     private int _currentWaypointIndex;
     private bool _isDriving;
+    private bool _isStopped;
    
     
 
@@ -48,8 +49,10 @@ namespace Traffic
 
         // set random speed for traffic car
         engineTorque = Random.Range(_minEngineTorque, _maxEngineTorque);
+        ReleaseBrake();
+        Drive();
 
-    }
+        }
 
 
     void FixedUpdate()
@@ -60,7 +63,6 @@ namespace Traffic
         ApplySteer();
         Drive();
         CheckWaypointDistance();
-        CarControl();
         UpdateWheels(_wheelColliders, _transforms);
         AdjustMotorTorqueForIncline();
     }
@@ -73,7 +75,7 @@ namespace Traffic
 	    {
 		    _currentWaypointIndex = Random.Range(0, waypoints.Length - 1);
             Vector3 possiblePosition = waypoints[_currentWaypointIndex].transform.position;
-            Collider[] colliders = Physics.OverlapSphere(possiblePosition, 2f, LayerMask.NameToLayer("Traffic"));
+            Collider[] colliders = Physics.OverlapSphere(possiblePosition, 20f, LayerMask.NameToLayer("Car"));
 		    // if there are no traffic vehicles occupying the space then move car there
 		    if (colliders.Length == 0) 
 		    {
@@ -116,28 +118,15 @@ namespace Traffic
         }
     }
 
-    // Slows the car down when reaching waypoints
-    private void CarControl()
-    {
-        
-        bool isNearWaypoint = Vector3.Distance(transform.position, waypoints[_currentWaypointIndex].transform.position) <= 10f;
-        bool isMovingFast = _rb.velocity.magnitude > 1.5;
-
-        if (isNearWaypoint && isMovingFast)
-        {
-            ApplyDrivingBrake();
-            return;
-        }
-
-    }
 
     private void ApplyDrivingBrake()
     {
+        if (_isStopped) return;
         // 70 % distribution of braking on the front tyres, 30 % on rear
-            backLeft.brakeTorque = _drivingBrakeTorque * 0.5f;
-            backRight.brakeTorque = _drivingBrakeTorque * 0.5f;
-            frontLeft.brakeTorque = _drivingBrakeTorque * 1.5f;
-            frontRight.brakeTorque = _drivingBrakeTorque * 1.5f;
+        backLeft.brakeTorque = _drivingBrakeTorque * 0.5f;
+        backRight.brakeTorque = _drivingBrakeTorque * 0.5f;
+        frontLeft.brakeTorque = _drivingBrakeTorque * 1.5f;
+        frontRight.brakeTorque = _drivingBrakeTorque * 1.5f;
     }
 
     public void ApplyHandBrake()
@@ -147,6 +136,7 @@ namespace Traffic
         backRight.brakeTorque = _handBrakeTorque * 0.5f;
         frontLeft.brakeTorque = _handBrakeTorque * 1.5f;
         frontRight.brakeTorque = _handBrakeTorque * 1.5f;
+        _isStopped = true;
     }
 
     public void ReleaseBrake()
@@ -155,6 +145,7 @@ namespace Traffic
         backRight.brakeTorque = 0;
         frontLeft.brakeTorque = 0;
         frontRight.brakeTorque = 0;
+        _isStopped = false;
     }
 
     private void SetMotorTorque(float torque)

@@ -43,16 +43,21 @@ namespace Traffic
 
         private void OnTriggerExit(Collider other)
         {
-            if (userCar != null)
+            if (other.gameObject.layer == LayerMask.NameToLayer("Car") ||
+                other.gameObject.layer == LayerMask.NameToLayer("HazardCar") ||
+                other.gameObject.layer == LayerMask.NameToLayer("HumanBystander"))
             {
-                userCar.ReleaseBrake();
-            }
-            else if (trafficCar != null)
-            {
-                trafficCar.ReleaseBrake();
+                if (userCar != null)
+                {
+                    userCar.ReleaseBrake();
+                }
+                else if (trafficCar != null)
+                {
+                    trafficCar.ReleaseBrake();
+                }
             }
         }
-        
+
         private void CarAdvanceTrafficLight(Collider other, TrafficCarController tc = null, CarController cc = null)
         {
             bool user = cc != null;

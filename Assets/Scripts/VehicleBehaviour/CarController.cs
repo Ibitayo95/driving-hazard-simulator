@@ -1,3 +1,4 @@
+using GleyTrafficSystem;
 using UnityEngine;
 
 namespace VehicleBehaviour
@@ -20,18 +21,23 @@ namespace VehicleBehaviour
 
 
         // Car specs
-        public float maxMotorTorque; // Maximum torque the motor can apply
-        public float maxSteeringAngle = 30f; // Maximum steer angle the wheels can have
-        public float drivingBrakeTorque = 300f; // The torque needed to gently brake to control car
-        public float handBrakeTorque = 1000f; // brings car to a full stop
+        private float maxMotorTorque = 130f; // Maximum torque the motor can apply
+        private float maxSteeringAngle = 45f; // Maximum steer angle the wheels can have
+        private float drivingBrakeTorque = 300f; // The torque needed to gently brake to control car
+        private float handBrakeTorque = 1000f; // brings car to a full stop
         public Vector3 centreOfMass;
-        public float currentMotorTorque;
+        private float currentMotorTorque;
         private Rigidbody _rb;
 
         // Car route information
         private PlayerRouteWaypoint[] _playerRoute;
         private int _currentWaypointIndex;
         private bool _isDriving;
+        private bool _hasBrakedToStop;
+
+        // Sound
+        public AudioSource pedestrianImpact;
+        public AudioSource carImpact;
     
 
         private void Start()
@@ -44,13 +50,7 @@ namespace VehicleBehaviour
 
             if (SimulationConfig.CarPositionRandomised)
             {
-                // set waypoint to random viable position
-                _currentWaypointIndex = SimulationConfig.random.Next(0, _playerRoute.Length - 1);
-                // set position
-                transform.position = _playerRoute[_currentWaypointIndex].transform.position;
-                // set rotation of car towards the next waypoint
-                transform.LookAt(_playerRoute[_currentWaypointIndex + 1].transform);
-
+                SetRandomPositionOnRoute();
             }
         }
 
@@ -63,7 +63,6 @@ namespace VehicleBehaviour
             ApplySteer();
             Drive();
             CheckWaypointDistance();
-            CarControl();
             UpdateWheels(_wheelColliders, _transforms);
             AdjustMotorTorqueForIncline();
         }
@@ -97,22 +96,10 @@ namespace VehicleBehaviour
             }
         }
 
-        // Slows car down as it approaches various waypoints
-        private void CarControl()
-        {
-       
-            bool isNearWaypoint = Vector3.Distance(transform.position, _playerRoute[_currentWaypointIndex].transform.position) <= 10f;
-            bool isMovingFast = _rb.velocity.magnitude > 1.5;
-
-            if (isNearWaypoint && isMovingFast)
-            {
-                ApplyDrivingBrake();
-                return;
-            }
-        }
 
         private void ApplyDrivingBrake()
         {
+            if (_hasBrakedToStop) return;
             // 70 % distribution of braking on the front tyres, 30 % on rear
             backLeft.brakeTorque = drivingBrakeTorque * 0.5f;
             backRight.brakeTorque = drivingBrakeTorque * 0.5f;
@@ -127,6 +114,8 @@ namespace VehicleBehaviour
             backRight.brakeTorque = handBrakeTorque * 0.5f;
             frontLeft.brakeTorque = handBrakeTorque * 1.5f;
             frontRight.brakeTorque = handBrakeTorque * 1.5f;
+
+            _hasBrakedToStop = true;
         }
 
         public void ReleaseBrake()
@@ -135,6 +124,7 @@ namespace VehicleBehaviour
             backRight.brakeTorque = 0;
             frontLeft.brakeTorque = 0;
             frontRight.brakeTorque = 0;
+            _hasBrakedToStop = false;
         }
 
         private void SetMotorTorque(float torque)
@@ -179,6 +169,26 @@ namespace VehicleBehaviour
             SetMotorTorque(currentMotorTorque);
         }
 
+        private void SetRandomPositionOnRoute()
+        {
+            bool positionSet = false;
+
+            while (!positionSet)
+            {
+                _currentWaypointIndex = Random.Range(0, _playerRoute.Length - 1);
+                Vector3 possiblePosition = _playerRoute[_currentWaypointIndex].transform.position;
+                Collider[] colliders = Physics.OverlapSphere(possiblePosition, 20f, LayerMask.NameToLayer("Car"));
+                // if there are no traffic vehicles occupying the space then move car there
+                if (colliders.Length == 0)
+                {
+                    transform.position = possiblePosition;
+                    transform.LookAt(_playerRoute[_currentWaypointIndex + 1].transform);
+                    positionSet = true;
+                }
+                // otherwise we loop again selecting a new random position
+            }
+        }
+
 
 
         // if human is hit, ragdoll physics occurs
@@ -191,9 +201,15 @@ namespace VehicleBehaviour
                 direction = direction.normalized;
 
                 collision.gameObject.GetComponentInParent<RagdollActivator>().HitByVehicle(direction, 5f);
+                pedestrianImpact.Play();
+            }
+
+            if (collision.gameObject.layer == LayerMask.NameToLayer("Car") || 
+                collision.gameObject.layer == LayerMask.NameToLayer("HazardCar"))
+            {
+                carImpact.Play();
             }
         }
-
 
     }
 }

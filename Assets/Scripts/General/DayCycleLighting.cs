@@ -1,7 +1,8 @@
 using DistantLands.Cozy;
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using VehicleBehaviour;
 
 [ExecuteInEditMode]
 public class DayCycleLighting : MonoBehaviour
@@ -10,13 +11,14 @@ public class DayCycleLighting : MonoBehaviour
     public CozyWeather Weather;
     private bool _lightsOn;
     private bool _isDark;
-    private Light[] _lights;
+    public List<Light> _lights;
+   
     
     void Awake()
     {
         LampMaterial.DisableKeyword("_EMISSION");
         _lightsOn = false;
-        _lights = GetComponentsInChildren<Light>();
+        
         if (_lights[0].enabled)
         {
             foreach (Light light in _lights)

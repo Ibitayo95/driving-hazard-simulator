@@ -1,3 +1,4 @@
+using GleyTrafficSystem;
 using UnityEngine;
 
 namespace VehicleBehaviour
@@ -33,6 +34,10 @@ namespace VehicleBehaviour
         private int _currentWaypointIndex;
         private bool _isDriving;
         private bool _hasBrakedToStop;
+
+        // Sound
+        public AudioSource pedestrianImpact;
+        public AudioSource carImpact;
     
 
         private void Start()
@@ -45,13 +50,7 @@ namespace VehicleBehaviour
 
             if (SimulationConfig.CarPositionRandomised)
             {
-                // set waypoint to random viable position
-                _currentWaypointIndex = SimulationConfig.random.Next(0, _playerRoute.Length - 1);
-                // set position
-                transform.position = _playerRoute[_currentWaypointIndex].transform.position;
-                // set rotation of car towards the next waypoint
-                transform.LookAt(_playerRoute[_currentWaypointIndex + 1].transform);
-
+                SetRandomPositionOnRoute();
             }
         }
 
@@ -170,6 +169,26 @@ namespace VehicleBehaviour
             SetMotorTorque(currentMotorTorque);
         }
 
+        private void SetRandomPositionOnRoute()
+        {
+            bool positionSet = false;
+
+            while (!positionSet)
+            {
+                _currentWaypointIndex = Random.Range(0, _playerRoute.Length - 1);
+                Vector3 possiblePosition = _playerRoute[_currentWaypointIndex].transform.position;
+                Collider[] colliders = Physics.OverlapSphere(possiblePosition, 20f, LayerMask.NameToLayer("Car"));
+                // if there are no traffic vehicles occupying the space then move car there
+                if (colliders.Length == 0)
+                {
+                    transform.position = possiblePosition;
+                    transform.LookAt(_playerRoute[_currentWaypointIndex + 1].transform);
+                    positionSet = true;
+                }
+                // otherwise we loop again selecting a new random position
+            }
+        }
+
 
 
         // if human is hit, ragdoll physics occurs
@@ -182,6 +201,13 @@ namespace VehicleBehaviour
                 direction = direction.normalized;
 
                 collision.gameObject.GetComponentInParent<RagdollActivator>().HitByVehicle(direction, 5f);
+                pedestrianImpact.Play();
+            }
+
+            if (collision.gameObject.layer == LayerMask.NameToLayer("Car") || 
+                collision.gameObject.layer == LayerMask.NameToLayer("HazardCar"))
+            {
+                carImpact.Play();
             }
         }
 

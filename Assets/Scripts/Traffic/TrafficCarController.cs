@@ -49,8 +49,10 @@ namespace Traffic
 
         // set random speed for traffic car
         engineTorque = Random.Range(_minEngineTorque, _maxEngineTorque);
+        ReleaseBrake();
+        Drive();
 
-    }
+        }
 
 
     void FixedUpdate()
@@ -73,7 +75,7 @@ namespace Traffic
 	    {
 		    _currentWaypointIndex = Random.Range(0, waypoints.Length - 1);
             Vector3 possiblePosition = waypoints[_currentWaypointIndex].transform.position;
-            Collider[] colliders = Physics.OverlapSphere(possiblePosition, 10f, LayerMask.NameToLayer("Traffic"));
+            Collider[] colliders = Physics.OverlapSphere(possiblePosition, 20f, LayerMask.NameToLayer("Car"));
 		    // if there are no traffic vehicles occupying the space then move car there
 		    if (colliders.Length == 0) 
 		    {

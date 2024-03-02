@@ -20,10 +20,10 @@ namespace Traffic
     // Car specs
     public float engineTorque;
     private readonly float _minEngineTorque = 130f;
-    private readonly float _maxEngineTorque = 180f;
+    private readonly float _maxEngineTorque = 145f;
     private readonly float _maxSteeringAngle = 45f; // Maximum steer angle the wheels can have
     private readonly float _drivingBrakeTorque = 300f; // The torque needed to gently brake to control car
-    private readonly float _handBrakeTorque = 1000f; // brings car to a full stop
+    private readonly float _handBrakeTorque = 30000f; // brings car to a full stop
     public Vector3 centreOfMass;
     private float _currentMotorTorque;
     private Rigidbody _rb;
@@ -73,7 +73,7 @@ namespace Traffic
 	    {
 		    _currentWaypointIndex = Random.Range(0, waypoints.Length - 1);
             Vector3 possiblePosition = waypoints[_currentWaypointIndex].transform.position;
-            Collider[] colliders = Physics.OverlapSphere(possiblePosition, 2f, LayerMask.NameToLayer("Traffic"));
+            Collider[] colliders = Physics.OverlapSphere(possiblePosition, 10f, LayerMask.NameToLayer("Traffic"));
 		    // if there are no traffic vehicles occupying the space then move car there
 		    if (colliders.Length == 0) 
 		    {

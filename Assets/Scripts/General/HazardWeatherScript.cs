@@ -97,15 +97,17 @@ public class HazardWeatherScript : MonoBehaviour
             fogCheck = true;
         }
 
-        // if global weather pattern changes then update the script to match
-        if (_globalWeather.currentWeather != currentWeatherProfile)
+        // changing the type in the editor can force weather change (for debugging)
+        if (_globalWeather.currentWeather != _weatherMap[currentWeatherType])
         {
-            currentWeatherProfile = _globalWeather.currentWeather;
-            currentWeatherType = _weatherMap.FirstOrDefault(x => x.Value == currentWeatherProfile).Key;
+            foreach (CozyEcosystem i in _globalWeather.ecosystems)
+            {
+                i.SetWeather(_weatherMap[currentWeatherType]);
+                currentWeatherProfile = _weatherMap[currentWeatherType];
+            }
+
             fogCheck = false;
         }
-
-    
     }
 }
 

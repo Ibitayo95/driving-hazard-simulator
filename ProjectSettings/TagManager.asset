@@ -21,6 +21,7 @@ TagManager:
   - RightController
   - Fog
   - RoadLamp
+  - RecordingCamera
   layers:
   - Default
   - TransparentFX

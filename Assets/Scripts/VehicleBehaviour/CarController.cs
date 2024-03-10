@@ -201,13 +201,13 @@ namespace VehicleBehaviour
                 direction = direction.normalized;
 
                 collision.gameObject.GetComponentInParent<RagdollActivator>().HitByVehicle(direction, 5f);
-                pedestrianImpact.Play();
+                pedestrianImpact?.Play();
             }
 
             if (collision.gameObject.layer == LayerMask.NameToLayer("Car") || 
                 collision.gameObject.layer == LayerMask.NameToLayer("HazardCar"))
             {
-                carImpact.Play();
+                carImpact?.Play();
             }
         }
 

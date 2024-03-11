@@ -21,6 +21,9 @@ namespace PolyPerfect.City
         private Vector3 targetPoint;
         private Vector3 destination;
         private Vector3 start;
+        private static readonly int Speed = Animator.StringToHash("speed");
+        private static readonly int Walking = Animator.StringToHash("Walking");
+
         private void Awake()
         {
             pathFinding = GetComponent<PathFinding>();
@@ -43,10 +46,10 @@ namespace PolyPerfect.City
             if (trajectory != null)
             {
                 isMoving = true;
-                GetClocestPoint();
+                GetClosestPoint();
                 targetPoint = trajectory[0].pathPositions[activepoint].transform.position;
                 start = transform.position;
-                animator.SetBool("Walking", true);
+                animator.SetBool(Walking, true);
             }
             else
             {
@@ -85,9 +88,10 @@ namespace PolyPerfect.City
                 {
                     speed = Mathf.Lerp(speed, maxspeed, 10 * Time.deltaTime);
                 }
-                
-                Vector3 newPosition = transform.position + (direction.normalized * speed * Time.deltaTime);
-                transform.position = newPosition;
+
+                var transform1 = transform;
+                Vector3 newPosition = transform1.position + (direction.normalized * (speed * Time.deltaTime));
+                transform1.position = newPosition;
 
                 if (direction != Vector3.zero)
                 {
@@ -99,7 +103,7 @@ namespace PolyPerfect.City
             {
                 speed = 0;
             }
-            animator.SetFloat("speed",speed * 0.8f);
+            animator.SetFloat(Speed,speed * 0.8f);
         }
         public void MoveToNextPoint()
         {
@@ -123,7 +127,7 @@ namespace PolyPerfect.City
                     {
                         activePath = 0;
                         activepoint = 0;
-                        GetClocestPoint();
+                        GetClosestPoint();
                         speed = 0;
                         isMoving = true;
                     }
@@ -181,7 +185,7 @@ namespace PolyPerfect.City
                 }
             }
         }
-        private void GetClocestPoint()
+        private void GetClosestPoint()
         {
             float minDistance = Mathf.Infinity;
             for (int i = 0; i < trajectory[activePath].pathPositions.Count; i++)
@@ -194,15 +198,6 @@ namespace PolyPerfect.City
                 }
             }
         }
-        private void OnTriggerEnter(Collider other)
-        {
-      
-  
-        }
-        private void OnTriggerExit(Collider other)
-        {
-
-        }
-
+        
     }
 }

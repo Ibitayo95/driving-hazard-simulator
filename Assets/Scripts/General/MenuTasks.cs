@@ -5,26 +5,28 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 public class MenuTasks : MonoBehaviour
 {
-    private AsyncOperation asyncLoadOperation;
     public TMP_Text loadingProgressText; // Reference to the UI Text element
 
-    public void LoadMainSimulation()
+    public void LoadMainSimulation(bool carPositionRandomised)
     {
-        SimulationConfig.CarPositionRandomised = false;
+        SimulationConfig.CarPositionRandomised = carPositionRandomised;
         string sceneName = SimulationConfig.IsHighFidelity ? "MainSimulationHighFidelity" : "MainSimulation";
-        asyncLoadOperation = SceneManager.LoadSceneAsync(sceneName);
-        asyncLoadOperation.allowSceneActivation = false; // Don't activate the scene immediately
-        StartCoroutine(LoadingProgress());
+        StartCoroutine(LoadMainSimulationAsync(sceneName));
+
     }
 
-    public void RestartSimulation()
+    IEnumerator LoadMainSimulationAsync(string sceneName)
     {
-        SimulationConfig.CarPositionRandomised = true;
-        string sceneName = SimulationConfig.IsHighFidelity ? "MainSimulationHighFidelity" : "MainSimulation";
-        asyncLoadOperation = SceneManager.LoadSceneAsync(sceneName);
-        asyncLoadOperation.allowSceneActivation = false; // Don't activate the scene immediately
-        StartCoroutine(LoadingProgress());
+        AsyncOperation asyncLoadOperation = SceneManager.LoadSceneAsync(sceneName);
+        while (!asyncLoadOperation.isDone)
+        {
+            // whilst waiting we update the loading progress
+            float progress = Mathf.Clamp01(asyncLoadOperation.progress / 0.9f);
+            loadingProgressText.text = "Loading: " + (progress * 100).ToString("F0") + "%";
+            yield return null;
+        }
     }
+
 
     public void ExitMainMenu()
     {
@@ -36,23 +38,5 @@ public class MenuTasks : MonoBehaviour
         SimulationConfig.IsHighFidelity = !SimulationConfig.IsHighFidelity;
     }
 
-    private void Update()
-    {
-        if (asyncLoadOperation != null && asyncLoadOperation.isDone)
-        {
-            // Activate the loaded scene when it's ready
-            asyncLoadOperation.allowSceneActivation = true;
-            asyncLoadOperation = null; // Reset the operation
-        }
-    }
-    
-    private IEnumerator LoadingProgress()
-    {
-        while (!asyncLoadOperation.isDone)
-        {
-            float progress = Mathf.Clamp01(asyncLoadOperation.progress / 0.9f);
-            loadingProgressText.text = "Loading: " + (progress * 100).ToString("F0") + "%";
-            yield return null;
-        }
-    }
+
 }

@@ -177,9 +177,7 @@ namespace VehicleBehaviour
             for (int i = 0; i < wheels.Length; i++)
             {
                 // Get wheel collider state
-                Vector3 position;
-                Quaternion rotation;
-                wheels[i].GetWorldPose(out position, out rotation);
+                wheels[i].GetWorldPose(out var position, out var rotation);
 
                 // Set Wheel transform state
                 trans[i].SetPositionAndRotation(position, rotation);

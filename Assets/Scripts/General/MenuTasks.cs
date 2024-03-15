@@ -1,37 +1,32 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-
 public class MenuTasks : MonoBehaviour
 {
+    public TMP_Text loadingProgressText; // Reference to the UI Text element
 
-    public void LoadMainSimulation()
+    public void LoadMainSimulation(bool carPositionRandomised)
     {
-        SimulationConfig.CarPositionRandomised = false;
-        if (SimulationConfig.IsHighFidelity)
+        SimulationConfig.CarPositionRandomised = carPositionRandomised;
+        string sceneName = SimulationConfig.IsHighFidelity ? "MainSimulationHighFidelity" : "MainSimulation";
+        StartCoroutine(LoadMainSimulationAsync(sceneName));
+
+    }
+
+    IEnumerator LoadMainSimulationAsync(string sceneName)
+    {
+        AsyncOperation asyncLoadOperation = SceneManager.LoadSceneAsync(sceneName);
+        while (!asyncLoadOperation.isDone)
         {
-            SceneManager.LoadScene("MainSimulationHighFidelity");
-        }
-        else
-        {
-            SceneManager.LoadScene("MainSimulation");
+            // whilst waiting we update the loading progress
+            float progress = Mathf.Clamp01(asyncLoadOperation.progress / 0.9f);
+            loadingProgressText.text = "Loading: " + (progress * 100).ToString("F0") + "%";
+            yield return null;
         }
     }
 
-    public void RestartSimulation()
-    {
-        // only set to random on simulation restarts
-        SimulationConfig.CarPositionRandomised = true;
-        if (SimulationConfig.IsHighFidelity)
-        {
-            SceneManager.LoadScene("MainSimulationHighFidelity");
-        }
-        else
-        {
-            SceneManager.LoadScene("MainSimulation");
-        }
-    }
 
     public void ExitMainMenu()
     {
@@ -40,7 +35,8 @@ public class MenuTasks : MonoBehaviour
 
     public void ToggleHighFidelityMode()
     {
-        SimulationConfig.IsHighFidelity = SimulationConfig.IsHighFidelity == false ? SimulationConfig.IsHighFidelity = true : SimulationConfig.IsHighFidelity = false;
+        SimulationConfig.IsHighFidelity = !SimulationConfig.IsHighFidelity;
     }
+
 
 }

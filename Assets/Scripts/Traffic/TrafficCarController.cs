@@ -76,9 +76,10 @@ namespace Traffic
 	        {
 		        _currentWaypointIndex = Random.Range(0, waypoints.Length - 1);
                 Vector3 possiblePosition = waypoints[_currentWaypointIndex].transform.position;
-                Collider[] colliders = Physics.OverlapSphere(possiblePosition, 20f, LayerMask.NameToLayer("Car"));
+                Collider[] hitColliders = new Collider[1];
+                var size = Physics.OverlapSphereNonAlloc(possiblePosition, 20f, hitColliders, LayerMask.NameToLayer("Car"));
 		        // if there are no traffic vehicles occupying the space then move car there
-		        if (colliders.Length == 0) 
+		        if (size == 0) 
 		        {
 			        transform.position = possiblePosition;
                     transform.LookAt(waypoints[_currentWaypointIndex + 1].transform);

@@ -42,12 +42,18 @@ namespace VehicleBehaviour
 
 
             if (groundedL)
-                carRigidBody.AddForceAtPosition(WheelL.transform.up * -antiRollForce,
-                    WheelL.transform.position);
+            {
+                var transform1 = WheelL.transform;
+                carRigidBody.AddForceAtPosition(transform1.up * -antiRollForce,
+                    transform1.position);
+            }
 
             if (groundedR)
-                carRigidBody.AddForceAtPosition(WheelR.transform.up * antiRollForce,
-                    WheelR.transform.position);
+            {
+                var transform1 = WheelR.transform;
+                carRigidBody.AddForceAtPosition(transform1.up * antiRollForce,
+                    transform1.position);
+            }
         }
     }
 }

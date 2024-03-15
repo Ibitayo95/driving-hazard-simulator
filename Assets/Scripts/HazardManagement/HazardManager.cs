@@ -72,9 +72,7 @@ public class HazardManager : MonoBehaviour
     public void ResolveHazard(IHazardObject hazard)
     {
         hazard.DeactivateHazard();
-        Debug.Log("Hazard has been removed.");
         HazardActivated = false;
-
         NumberOfHazardsOccurred++;
     }
 
@@ -94,11 +92,8 @@ public class HazardManager : MonoBehaviour
             yield return new WaitForSecondsRealtime(offset);
         }
         float reactionTime = 0;
-        Debug.Log("Timer has Started!");
         while (reactionTime < 5)
         {
-            Debug.Log($"Time Elapsed: {reactionTime}");
-            
             ControllerValidation();
             // space, left trigger or right trigger
             if (Input.GetKeyDown(KeyCode.Space) || IsTriggerPressed(LeftController) || IsTriggerPressed(RightController))
@@ -106,7 +101,6 @@ public class HazardManager : MonoBehaviour
                 // Log the reaction time and end the timer
                 newHazard.ReactionTime = reactionTime;
                 _hazards.Enqueue(newHazard);
-                Debug.Log($"Hazard SPOTTED! REACTION TIME = {reactionTime} Name = {hazard.Name}");
                 if (reactionSound != null) reactionSound.Play();
                 
                 ResolveHazard(hazard);
@@ -118,7 +112,6 @@ public class HazardManager : MonoBehaviour
         }
 
         // If the timer reaches 5 seconds without the user reacting, then HRT stays as default -1
-        Debug.LogWarning($"Hazard not reacted to: {hazard.Name}");
         _hazards.Enqueue(newHazard);
         ResolveHazard(hazard);
     }

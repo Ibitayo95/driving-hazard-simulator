@@ -10,13 +10,7 @@ public class RagdollActivator : MonoBehaviour
     {
         animator = GetComponentInChildren<Animator>();
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
+    
     public void HitByVehicle(Vector3 direction, float force)
     {
         // Disable the Animator

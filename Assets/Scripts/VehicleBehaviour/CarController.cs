@@ -30,7 +30,7 @@ namespace VehicleBehaviour
         private Rigidbody _rb;
 
         // Car route information
-        private PlayerRouteWaypoint[] _playerRoute;
+        public Transform[] _playerRoute;
         private int _currentWaypointIndex;
         private bool _isDriving;
         private bool _hasBrakedToStop;
@@ -42,7 +42,7 @@ namespace VehicleBehaviour
 
         private void Start()
         {
-            _playerRoute = PlayerRoute.route;
+           
             _rb = GetComponent<Rigidbody>();
             _rb.centerOfMass = centreOfMass;
             _wheelColliders = new[] { backRight, backLeft, frontLeft, frontRight };
@@ -208,6 +208,24 @@ namespace VehicleBehaviour
                 collision.gameObject.layer == LayerMask.NameToLayer("HazardCar"))
             {
                 carImpact?.Play();
+            }
+        }
+
+        // to visualise the user car's waypoints/route
+        private void OnDrawGizmos()
+        {
+            if (_playerRoute == null || _playerRoute.Length == 0) return;
+            foreach (var t in _playerRoute)
+            {
+                Gizmos.color = Color.red;
+                Gizmos.DrawWireCube(t.position, new Vector3(1, 1, 1));
+            }
+
+            Gizmos.color = Color.magenta;
+            // lines that connect the route of waypoints
+            for (var i = 0; i < _playerRoute.Length - 1; i++)
+            {
+                Gizmos.DrawLine(_playerRoute[i].position, _playerRoute[i + 1].position);
             }
         }
 

@@ -4,11 +4,19 @@ Virtual reality (VR) technology has demonstrated that it may be a very valuable 
 This study provides a solid foundation for using immersive VR technology to improve hazard awareness training, paving the way for future advancements that may eventually improve road safety. 
 
 ## Navigating the code
-
+All code is located within driving-hazard-simulator/Assets/Scripts/
+### Folders
+- General:  Utility classes for specialised use cases e.g. Simulation config, Day/Night Cycle script, Menu Scene tasks (Start simulation, exit simulation)
+- Hazard Management: Consists of main logic and scripting for hazards, hazard detection, analysis and summary.
+- InterfacesAndTypes: Foundational unchanging entities e.g. HazardType
+- Pathfinding: A* search pathfinding algorithm for random pedestrian movement - credit to Low Poly Epic City by PolyPerfect
+- PedestrianBehaviour: Scripting for hazard humans and normal pedestrians
+- Traffic: Scripting for traffic cars and traffic light intersections
+- VehicleBehaviour: Scripting for hazard cars and the user car (which follows a waypoint system and drives automatically using the wheelcolliders and the unity physics engine)
 ## The environment
 ![TitleScreen2](https://github.com/Ibitayo95/driving-hazard-simulator/assets/71972724/dda41aaa-e09f-4882-b9f2-c4b841235ba3)
 ![StreetViewArialDay](https://github.com/Ibitayo95/driving-hazard-simulator/assets/71972724/9dfd8606-4361-405d-bc8e-7d8eb5fb3e8c)
-![FidelityComparisonHigh2](https://github.com/Ibitayo95/driving-hazard-simulator/assets/71972724/66e63c45-e133-4af7-95f2-6c609e9a5480)
+![FidelityComparisonHigh](https://github.com/Ibitayo95/driving-hazard-simulator/assets/71972724/649f3189-eab5-43fd-ac6d-d4bea5d2dcf9)
 ![StreetViewRain3](https://github.com/Ibitayo95/driving-hazard-simulator/assets/71972724/05a4a6f2-5205-41d8-8a5d-f3a95740dba6)
 ![SummaryScreen1](https://github.com/Ibitayo95/driving-hazard-simulator/assets/71972724/896fdb32-eb8e-4783-bafd-6bd351b33d65)
 

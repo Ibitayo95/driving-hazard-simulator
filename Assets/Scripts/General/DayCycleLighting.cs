@@ -1,8 +1,6 @@
 using DistantLands.Cozy;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
-using VehicleBehaviour;
 
 [ExecuteInEditMode]
 public class DayCycleLighting : MonoBehaviour

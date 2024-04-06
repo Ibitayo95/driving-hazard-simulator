@@ -30,6 +30,7 @@ namespace Traffic
 
         // Car route information
         public Transform[] waypoints;
+        public Transform[] possibleStartPoints;
         private int _currentWaypointIndex;
         private bool _isDriving;
         private bool _isStopped;
@@ -87,6 +88,12 @@ namespace Traffic
 		        }
 		        // otherwise we loop again selecting a new random position
 	        }
+        }
+
+        private void SetPostionFromStartPoint()
+        {
+            transform.position = possibleStartPoints[Random.Range(0, possibleStartPoints.Length - 1)].position;
+            transform.LookAt(waypoints[_currentWaypointIndex + 1].transform);
         }
 
 

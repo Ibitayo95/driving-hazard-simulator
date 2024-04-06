@@ -1,10 +1,8 @@
 using DistantLands.Cozy;
 using DistantLands.Cozy.Data;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using KaimiraGames;
-using System.Linq;
 
 public class HazardWeatherScript : MonoBehaviour
 {
